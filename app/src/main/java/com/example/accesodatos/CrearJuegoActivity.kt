@@ -6,33 +6,31 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.accesodatos.databinding.ActivityCrearJuegoBinding
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 class CrearJuegoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCrearJuegoBinding
 
-    private val seleccionarImagen =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                // Guarda la URI de la imagen seleccionada en la variable
-                uriImagenSeleccionada = it
+    private var urlImagen: Uri? = null
+    private lateinit var dbRef: DatabaseReference
+    private lateinit var stRef: StorageReference
+    private lateinit var cover: ImageView
+    private lateinit var listaJuegos: MutableList<Juego>
 
-                // Puedes mostrar la imagen seleccionada en tu interfaz de usuario si es necesario
-                // imageView.setImageURI(it)
-            }
-        }
-    private var uriImagenSeleccionada: Uri? = null
-    private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("juegos")
-    private val storageReference: StorageReference = FirebaseStorage.getInstance().getReference("imagenes")
+
+
+    private lateinit var job: Job
 
 
 
@@ -81,6 +79,9 @@ class CrearJuegoActivity : AppCompatActivity() {
 
         binding = ActivityCrearJuegoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val thisActivity = this
+        job = Job()
 
 
         //Volver atras boton
@@ -150,61 +151,59 @@ class CrearJuegoActivity : AppCompatActivity() {
 
         //Cuando le da click al boton de guardar juego
         binding.btnIntroducirJuego.setOnClickListener {
-            guardarJuegoEnFirebase()
+            //Varibles que estan el los edit text
+            var nombreJuego = binding.tietNombreJuego.text.toString()
+            var nombreEstudioDesarrollo = binding.tietNombreEstudio.text.toString()
+            var fechaLanzamiento = binding.tietFechaLanzamiento.text.toString()
+            if(nombreJuego.trim().isEmpty() || nombreEstudioDesarrollo.trim().isEmpty() || fechaLanzamiento.trim().isEmpty()){
+                Toast.makeText(this, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
+            }else if(urlImagen == null){
+                Toast.makeText(this, "Falta seleccionar imagen", Toast.LENGTH_SHORT).show()
+            }else if(Utilidades.existeJuego(listaJuegos, nombreJuego.trim())){
+                Toast.makeText(this, "Ese juego ya existe", Toast.LENGTH_SHORT).show()
+            }else{
+                var idGenerado: String? = dbRef.child("PS2").child("juegos").push().key
+                //GlobalScope(Dispatchers.IO)
+                launch {
+                    val urlCoverFirebase =
+                        Utilidades.guardarImagenCover(stRef, idGenerado!!, urlImagen!!)
+
+                    Utilidades.escribirJuego(
+                        dbRef, idGenerado!!,
+                        nombreJuego.trim(),
+                        nombreEstudioDesarrollo.trim(),
+                        fechaLanzamiento.trim(),
+                        opcionSeleccionadaEdad,
+                        opcionSeleccionadaGenero,
+                        urlCoverFirebase
+                    )
+                    Utilidades.tostadaCorrutina(
+                        thisActivity,
+                        applicationContext,
+                        "Juego creado con exito"
+                    )
+                    val activity = Intent(applicationContext, MainActivity::class.java)
+                    startActivity(activity)
+                }
+            }
         }
+        //Cuando le da click en la imagen para guardar imagen del juego
         binding.ivImagenJuego.setOnClickListener {
-            seleccionarImagen.launch("image/*")
+            accesoGaleria.launch("image/*")
         }
     }
-    // Función para guardar un juego en Firebase
-    private fun guardarJuegoEnFirebase() {
-        // Verifica si se ha seleccionado una imagen
-        if (uriImagenSeleccionada != null) {
-            // Genera un nombre único para la imagen (puedes personalizar según tus necesidades)
-            val nombreImagen = "imagen_${System.currentTimeMillis()}.jpg"
+    override fun onDestroy() {
+        job.cancel()
+        super.onDestroy()
+    }
 
-            // Referencia al lugar en Firebase Storage donde se almacenará la imagen
-            val referenciaImagen = storageReference.child(nombreImagen)
-
-            // Sube la imagen al Storage
-            referenciaImagen.putFile(uriImagenSeleccionada!!)
-                .addOnSuccessListener {
-                    // Aquí puedes manejar el éxito de la carga, por ejemplo, obtener la URL de la imagen
-                    referenciaImagen.downloadUrl.addOnSuccessListener { url ->
-                        // URL de la imagen en Firebase Storage
-                        val urlImagenFirebase = url.toString()
-
-                        // Crea un nuevo objeto Juego con la URL de la imagen y otros detalles
-                        val nuevoJuego = Juego(
-                            imagen = urlImagenFirebase,
-                            nombre = "Nombre del juego", // Reemplaza con el nombre real del juego
-                            estudio = "Estudio del juego", // Reemplaza con el estudio real del juego
-                            fechaLanzamiento = "Fecha de lanzamiento", // Reemplaza con la fecha real del lanzamiento
-                            genero = opcionSeleccionadaGenero,
-                            edad = opcionSeleccionadaEdad
-                        )
-
-                        // Genera una clave única para el juego en la base de datos
-                        val claveJuego = databaseReference.push().key
-
-                        // Guarda el juego en la base de datos usando la clave generada
-                        claveJuego?.let { clave ->
-                            databaseReference.child(clave).setValue(nuevoJuego)
-                        }
-
-                        // Realiza otras acciones después de agregar el juego si es necesario
-                        Toast.makeText(this@CrearJuegoActivity, "Juego creado con éxito", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@CrearJuegoActivity, MainActivity::class.java)
-                        startActivity(intent)
-                    }
-                }
-                .addOnFailureListener { e ->
-                    // Maneja los errores de carga de la imagen
-                    Toast.makeText(this@CrearJuegoActivity, "Error al cargar la imagen: $e", Toast.LENGTH_SHORT).show()
-                }
-        } else {
-            // Maneja el caso en el que no se ha seleccionado ninguna imagen
-            Toast.makeText(this@CrearJuegoActivity, "Selecciona una imagen para el juego", Toast.LENGTH_SHORT).show()
+    private val accesoGaleria = registerForActivityResult(ActivityResultContracts.GetContent())
+    {uri: Uri ->
+        if(uri!=null){
+            urlImagen = uri
+            cover.setImageURI(uri)
         }
     }
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + job
 }
