@@ -1,5 +1,6 @@
 package com.example.accesodatos
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
@@ -19,6 +20,13 @@ class CrearJuegoActivity : AppCompatActivity() {
         binding = ActivityCrearJuegoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        //Volver atras boton
+        binding.ivBack.setOnClickListener {
+            //Pasamos a la siguiente actividad
+            val intent = Intent(this@CrearJuegoActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         //Configurar el spinner de genero de juego
         //Obtenemos el spinner
