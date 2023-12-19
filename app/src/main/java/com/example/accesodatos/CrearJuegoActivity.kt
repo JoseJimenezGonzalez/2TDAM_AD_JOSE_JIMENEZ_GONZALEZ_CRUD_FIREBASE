@@ -224,7 +224,7 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
             urlImagen = uri
             cover.setImageURI(uri)
         }
-    } as (Uri?) -> Unit
+    }
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
 }
