@@ -3,25 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="16dp">
+    app:cardCornerRadius="16dp"
+    android:backgroundTint="#C8E6C9">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
+        <androidx.cardview.widget.CardView
             android:id="@+id/ivIconoMandoPS2"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_ps2_mando">
-        </ImageView>
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            android:layout_margin="20dp">
+            <ImageView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_ps2_mando">
+            </ImageView>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tvNombreJuego"
             app:layout_constraintStart_toEndOf="@id/ivIconoMandoPS2"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tvNombreEstudio"
+            android:layout_marginLeft="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nombre del juego">
@@ -30,8 +41,9 @@
         <TextView
             android:id="@+id/tvNombreEstudio"
             app:layout_constraintStart_toEndOf="@id/ivIconoMandoPS2"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="15dp"
             app:layout_constraintTop_toBottomOf="@id/tvNombreJuego"
+            app:layout_constraintBottom_toTopOf="@id/tvGeneroJuego"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nombre del estudio del juego">
@@ -40,8 +52,9 @@
         <TextView
             android:id="@+id/tvGeneroJuego"
             app:layout_constraintStart_toEndOf="@id/ivIconoMandoPS2"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="15dp"
             app:layout_constraintTop_toBottomOf="@id/tvNombreEstudio"
+            app:layout_constraintBottom_toTopOf="@id/tvEdad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Género del juego">
@@ -50,8 +63,9 @@
         <TextView
             android:id="@+id/tvEdad"
             app:layout_constraintStart_toEndOf="@id/ivIconoMandoPS2"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="15dp"
             app:layout_constraintTop_toBottomOf="@id/tvGeneroJuego"
+            app:layout_constraintBottom_toTopOf="@id/tvFechaSalida"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Edad recomendada">
@@ -60,12 +74,33 @@
         <TextView
             android:id="@+id/tvFechaSalida"
             app:layout_constraintStart_toEndOf="@id/ivIconoMandoPS2"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="15dp"
             app:layout_constraintTop_toBottomOf="@id/tvEdad"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fecha de salida">
         </TextView>
+
+        <ImageView
+            android:id="@+id/ivEditar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_edit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp">
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/ivBorrar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_delete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp">
+        </ImageView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CrearJuego">
+    tools:context=".CrearJuegoActivity">
 
     <TextView
         android:id="@+id/tvTitulo"
@@ -27,6 +27,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/rule_of_rose"
         android:layout_margin="20dp">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/ic_back"
+        android:padding="10dp">
     </ImageView>
 
     <com.google.android.material.textfield.TextInputLayout
