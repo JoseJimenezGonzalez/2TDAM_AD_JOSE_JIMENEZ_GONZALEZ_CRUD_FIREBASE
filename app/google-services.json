@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "371201546203",
+    "project_id": "practica-ad-1",
+    "storage_bucket": "practica-ad-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:371201546203:android:76d6d6aea1eb15fefbb9fe",
+        "android_client_info": {
+          "package_name": "com.example.accesodatos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAWSaX1aFdj1YolLU431MjHnYHoMpbsZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
