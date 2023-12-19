@@ -13,12 +13,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.example.accesodatos.databinding.ActivityCrearJuegoBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class CrearJuegoActivity : AppCompatActivity() {
+class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var binding: ActivityCrearJuegoBinding
 
@@ -29,10 +30,7 @@ class CrearJuegoActivity : AppCompatActivity() {
     private lateinit var listaJuegos: MutableList<Juego>
 
 
-
     private lateinit var job: Job
-
-
 
 
     private var opcionSeleccionadaGenero: String = ""
@@ -97,13 +95,19 @@ class CrearJuegoActivity : AppCompatActivity() {
         //Creamos un array con el que vamos a inflar al spinner
 
         // Crear un ArrayAdapter utilizando la lista de opciones y el diseño predeterminado
-        val adapterGenero = ArrayAdapter(this, android.R.layout.simple_list_item_1, opcionesGeneroJuegos)
+        val adapterGenero =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, opcionesGeneroJuegos)
         // Aplicar el adaptador al Spinner
         spinnerGenero.adapter = adapterGenero
 
         // Configurar un listener para manejar la selección de elementos en el Spinner
         spinnerGenero.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: android.view.View?,
+                position: Int,
+                id: Long
+            ) {
                 // Obtener la opción seleccionada
                 val selectedItem = opcionesGeneroJuegos[position]
 
@@ -111,7 +115,11 @@ class CrearJuegoActivity : AppCompatActivity() {
                 opcionSeleccionadaGenero = selectedItem
 
                 // Mostrar la opción seleccionada
-                Toast.makeText(this@CrearJuegoActivity, "Seleccionaste: $selectedItem", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@CrearJuegoActivity,
+                    "Seleccionaste: $selectedItem",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -126,13 +134,19 @@ class CrearJuegoActivity : AppCompatActivity() {
         //Creamos un array con el que vamos a inflar al spinner
 
         // Crear un ArrayAdapter utilizando la lista de opciones y el diseño predeterminado
-        val adapterEdad = ArrayAdapter(this, android.R.layout.simple_list_item_1, edadesRecomendadasJuegos)
+        val adapterEdad =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, edadesRecomendadasJuegos)
         // Aplicar el adaptador al Spinner
         spinnerEdad.adapter = adapterEdad
 
         // Configurar un listener para manejar la selección de elementos en el Spinner
         spinnerEdad.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: android.view.View?,
+                position: Int,
+                id: Long
+            ) {
                 // Obtener la opción seleccionada
                 val selectedItem = edadesRecomendadasJuegos[position]
 
@@ -140,7 +154,11 @@ class CrearJuegoActivity : AppCompatActivity() {
                 opcionSeleccionadaEdad = selectedItem
 
                 // Mostrar la opción seleccionada
-                Toast.makeText(this@CrearJuegoActivity, "Seleccionaste: $selectedItem", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@CrearJuegoActivity,
+                    "Seleccionaste: $selectedItem",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -155,13 +173,15 @@ class CrearJuegoActivity : AppCompatActivity() {
             var nombreJuego = binding.tietNombreJuego.text.toString()
             var nombreEstudioDesarrollo = binding.tietNombreEstudio.text.toString()
             var fechaLanzamiento = binding.tietFechaLanzamiento.text.toString()
-            if(nombreJuego.trim().isEmpty() || nombreEstudioDesarrollo.trim().isEmpty() || fechaLanzamiento.trim().isEmpty()){
+            if (nombreJuego.trim().isEmpty() || nombreEstudioDesarrollo.trim()
+                    .isEmpty() || fechaLanzamiento.trim().isEmpty()
+            ) {
                 Toast.makeText(this, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
-            }else if(urlImagen == null){
+            } else if (urlImagen == null) {
                 Toast.makeText(this, "Falta seleccionar imagen", Toast.LENGTH_SHORT).show()
-            }else if(Utilidades.existeJuego(listaJuegos, nombreJuego.trim())){
+            } else if (Utilidades.existeJuego(listaJuegos, nombreJuego.trim())) {
                 Toast.makeText(this, "Ese juego ya existe", Toast.LENGTH_SHORT).show()
-            }else{
+            } else {
                 var idGenerado: String? = dbRef.child("PS2").child("juegos").push().key
                 //GlobalScope(Dispatchers.IO)
                 launch {
@@ -192,18 +212,19 @@ class CrearJuegoActivity : AppCompatActivity() {
             accesoGaleria.launch("image/*")
         }
     }
+
     override fun onDestroy() {
         job.cancel()
         super.onDestroy()
     }
 
     private val accesoGaleria = registerForActivityResult(ActivityResultContracts.GetContent())
-    {uri: Uri ->
-        if(uri!=null){
+    { uri: Uri ->
+        if (uri != null) {
             urlImagen = uri
             cover.setImageURI(uri)
         }
-    }
+    } as (Uri?) -> Unit
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
 }

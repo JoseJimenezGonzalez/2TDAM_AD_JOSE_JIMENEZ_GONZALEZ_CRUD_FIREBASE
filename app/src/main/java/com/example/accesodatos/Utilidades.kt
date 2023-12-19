@@ -4,8 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -71,25 +69,6 @@ class Utilidades {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        }
-
-        fun animacionCarga(contexto: Context): CircularProgressDrawable{
-            val animacion = CircularProgressDrawable(contexto)
-            animacion.strokeWidth = 5f
-            animacion.centerRadius = 30f
-            animacion.start()
-            return animacion
-        }
-
-
-        val transicion = DrawableTransitionOptions.withCrossFade(500)
-
-        fun opcionesGlide(context: Context): RequestOptions {
-            val options = RequestOptions()
-                .placeholder(animacion_carga(context))
-                .fallback(R.drawable.escudo_generico)
-                .error(R.drawable.error_404)
-            return options
         }
     }
 }
