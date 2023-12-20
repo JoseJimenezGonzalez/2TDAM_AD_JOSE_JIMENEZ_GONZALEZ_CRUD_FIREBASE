@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.accesodatos.databinding.ActivityCrearJuegoBinding
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,6 +82,11 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
 
         val thisActivity = this
         job = Job()
+        cover = binding.ivImagenJuego
+        dbRef = FirebaseDatabase.getInstance().getReference()
+        stRef = FirebaseStorage.getInstance().getReference()
+        listaJuegos = Utilidades.obtenerListaJuegos(dbRef)
+
 
 
         //Volver atras boton
@@ -202,8 +209,6 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
                         applicationContext,
                         "Juego creado con exito"
                     )
-                    val activity = Intent(applicationContext, MainActivity::class.java)
-                    startActivity(activity)
                 }
             }
         }
@@ -219,7 +224,7 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private val accesoGaleria = registerForActivityResult(ActivityResultContracts.GetContent())
-    { uri: Uri ->
+    { uri: Uri? ->
         if (uri != null) {
             urlImagen = uri
             cover.setImageURI(uri)

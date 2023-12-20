@@ -20,10 +20,10 @@ class Utilidades {
         }
 
 
-        fun obtenerListaJuegos(db_ref: DatabaseReference):MutableList<Juego>{
+        fun obtenerListaJuegos(dbRef: DatabaseReference):MutableList<Juego>{
             var lista = mutableListOf<Juego>()
 
-            db_ref.child("PS2")
+            dbRef.child("PS2")
                 .child("juegos")
                 .addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -53,12 +53,12 @@ class Utilidades {
             ))
 
         suspend fun guardarImagenCover(stoRef: StorageReference, id:String, imagen: Uri):String{
-            lateinit var url_escudo_firebase: Uri
+            lateinit var urlCoverFirebase: Uri
 
-            url_escudo_firebase=stoRef.child("PS2").child("covers").child(id)
+            urlCoverFirebase=stoRef.child("PS2").child("covers").child(id)
                 .putFile(imagen).await().storage.downloadUrl.await()
 
-            return url_escudo_firebase.toString()
+            return urlCoverFirebase.toString()
         }
 
         fun tostadaCorrutina(activity: AppCompatActivity, contexto: Context, texto:String){
