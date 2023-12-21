@@ -11,6 +11,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.accesodatos.databinding.ActivityCrearJuegoBinding
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -19,6 +20,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.coroutines.CoroutineContext
 
 class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
@@ -33,6 +37,8 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
 
 
     private lateinit var job: Job
+    private var esFechaValida = false
+    private var fechaLanzamientoFormateada = ""
 
 
     private var opcionSeleccionadaGenero: String = ""
@@ -94,6 +100,28 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
             //Pasamos a la siguiente actividad
             val intent = Intent(this@CrearJuegoActivity, MainActivity::class.java)
             startActivity(intent)
+        }
+        //Fecha lanzamiento
+        //Fecha de nacimiento
+        binding.tietFechaLanzamiento.setOnClickListener {
+            val builder = MaterialDatePicker.Builder.datePicker()
+            val picker = builder.build()
+
+            picker.addOnPositiveButtonClickListener { selectedDateInMillis ->
+                val selectedDate = Date(selectedDateInMillis)
+                val currentDate = Date()
+
+                if(currentDate.after(selectedDate)){
+                    esFechaValida = true
+                    fechaLanzamientoFormateada = obtenerFechaLanzamientoFormateada(selectedDate)
+                    binding.tietFechaLanzamiento.setText(fechaLanzamientoFormateada)
+                }else{
+                    Toast.makeText(this, "Fecha de lanzamiento erronea", Toast.LENGTH_SHORT).show()
+                    esFechaValida = false
+                }
+            }
+
+            picker.show(supportFragmentManager, "jeje")
         }
 
         //Configurar el spinner de genero de juego
@@ -179,10 +207,9 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
             //Varibles que estan el los edit text
             var nombreJuego = binding.tietNombreJuego.text.toString()
             var nombreEstudioDesarrollo = binding.tietNombreEstudio.text.toString()
-            var fechaLanzamiento = binding.tietFechaLanzamiento.text.toString()
             var puntuacionRatingBar = binding.rbPuntuacion.rating.toString().toDouble()
             if (nombreJuego.trim().isEmpty() || nombreEstudioDesarrollo.trim()
-                    .isEmpty() || fechaLanzamiento.trim().isEmpty()
+                    .isEmpty() || fechaLanzamientoFormateada.isEmpty() || !esFechaValida
             ) {
                 Toast.makeText(this, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
             } else if (urlImagen == null) {
@@ -200,7 +227,7 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
                         dbRef, idGenerado!!,
                         nombreJuego.trim(),
                         nombreEstudioDesarrollo.trim(),
-                        fechaLanzamiento.trim(),
+                        fechaLanzamientoFormateada,
                         opcionSeleccionadaEdad,
                         opcionSeleccionadaGenero,
                         urlCoverFirebase,
@@ -223,6 +250,10 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
     override fun onDestroy() {
         job.cancel()
         super.onDestroy()
+    }
+    fun obtenerFechaLanzamientoFormateada(fechaNacimiento: Date): String {
+        val formato = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+        return formato.format(fechaNacimiento)
     }
 
     private val accesoGaleria = registerForActivityResult(ActivityResultContracts.GetContent())
