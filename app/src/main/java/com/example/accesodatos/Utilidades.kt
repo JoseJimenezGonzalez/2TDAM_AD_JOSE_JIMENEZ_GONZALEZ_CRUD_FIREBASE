@@ -41,7 +41,7 @@ class Utilidades {
             return lista
         }
 
-        fun escribirJuego(dbRef: DatabaseReference, id:String, nombreJuego:String, nombreEstudioDesarrollador:String, fechaLanzamiento: String, edadRecomendada: String, genero: String, urlFirebase:String)=
+        fun escribirJuego(dbRef: DatabaseReference, id:String, nombreJuego:String, nombreEstudioDesarrollador:String, fechaLanzamiento: String, edadRecomendada: String, genero: String, urlFirebase:String, puntuacionRatingBar: Double)=
             dbRef.child("PS2").child("juegos").child(id).setValue(Juego(
                 id,
                 urlFirebase,
@@ -49,7 +49,8 @@ class Utilidades {
                 nombreEstudioDesarrollador,
                 fechaLanzamiento,
                 genero,
-                edadRecomendada
+                edadRecomendada,
+                puntuacionRatingBar
             ))
 
         suspend fun guardarImagenCover(stoRef: StorageReference, id:String, imagen: Uri):String{

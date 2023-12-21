@@ -180,6 +180,7 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
             var nombreJuego = binding.tietNombreJuego.text.toString()
             var nombreEstudioDesarrollo = binding.tietNombreEstudio.text.toString()
             var fechaLanzamiento = binding.tietFechaLanzamiento.text.toString()
+            var puntuacionRatingBar = binding.rbPuntuacion.rating.toString().toDouble()
             if (nombreJuego.trim().isEmpty() || nombreEstudioDesarrollo.trim()
                     .isEmpty() || fechaLanzamiento.trim().isEmpty()
             ) {
@@ -202,7 +203,8 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
                         fechaLanzamiento.trim(),
                         opcionSeleccionadaEdad,
                         opcionSeleccionadaGenero,
-                        urlCoverFirebase
+                        urlCoverFirebase,
+                        puntuacionRatingBar
                     )
                     Utilidades.tostadaCorrutina(
                         thisActivity,

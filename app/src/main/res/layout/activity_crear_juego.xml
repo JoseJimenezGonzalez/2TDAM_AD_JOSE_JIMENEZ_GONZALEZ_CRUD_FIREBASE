@@ -130,7 +130,7 @@
         app:layout_constraintTop_toBottomOf="@id/lyPrimero"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnIntroducirJuego"
+        app:layout_constraintBottom_toTopOf="@id/lyTercero"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="match_parent"
@@ -151,11 +151,37 @@
         </Spinner>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/lyTercero"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/lySegundo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnIntroducirJuego"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Puntuación:"
+            android:layout_marginRight="20dp">
+        </TextView>
+        <RatingBar
+            android:id="@+id/rbPuntuacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1.0"
+            android:rating="0.0">
+        </RatingBar>
+    </LinearLayout>
+
     <Button
         android:id="@+id/btnIntroducirJuego"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/lySegundo"
+        app:layout_constraintTop_toBottomOf="@id/lyTercero"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
