@@ -4,6 +4,9 @@ import android.content.Context
 import android.net.Uri
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -70,6 +73,24 @@ class Utilidades {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+
+        fun animacion_carga(contexto: Context): CircularProgressDrawable{
+            val animacion = CircularProgressDrawable(contexto)
+            animacion.strokeWidth = 5f
+            animacion.centerRadius = 30f
+            animacion.start()
+            return animacion
+        }
+
+        val transicion = DrawableTransitionOptions.withCrossFade(500)
+
+        fun opcionesGlide(context: Context): RequestOptions {
+            val options = RequestOptions()
+                .placeholder(animacion_carga(context))
+                .fallback(R.drawable.ic_ps2_mando)
+                .error(R.drawable.error_404)
+            return options
         }
     }
 }
