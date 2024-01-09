@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
@@ -54,5 +55,28 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
         val edadRecomendadaJuego: TextView = itemView.findViewById(R.id.tvEdad)
         val fechaSalidaJuego: TextView = itemView.findViewById(R.id.tvFechaSalida)
         //Falta el rating bar que a los demas les ha dado problemas
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter(){
+            override fun performFiltering(p0: CharSequence?): FilterResults {
+                val busqueda = p0.toString().lowercase()
+                if (busqueda.isEmpty()){
+                    listaFiltrada = listaJuegos
+                }else {
+                    listaFiltrada = (listaJuegos.filter {
+                        it.nombre.toString().lowercase().contains(busqueda)
+                    }) as MutableList<Juego>
+                }
+
+                val filterResults = FilterResults()
+                filterResults.values = listaFiltrada
+                return filterResults
+            }
+
+            override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
+                notifyDataSetChanged()
+            }
+        }
     }
 }
