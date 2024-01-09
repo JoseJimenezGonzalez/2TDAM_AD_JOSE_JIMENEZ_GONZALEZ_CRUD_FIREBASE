@@ -25,6 +25,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="80dp"
                 android:layout_height="120dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_ps2_mando">
             </ImageView>
         </androidx.cardview.widget.CardView>
