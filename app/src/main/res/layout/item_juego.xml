@@ -106,12 +106,13 @@
 
         <ImageView
             android:id="@+id/ivBorrar"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivEditar"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_delete"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_margin="10dp">
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp">
         </ImageView>
 
 
