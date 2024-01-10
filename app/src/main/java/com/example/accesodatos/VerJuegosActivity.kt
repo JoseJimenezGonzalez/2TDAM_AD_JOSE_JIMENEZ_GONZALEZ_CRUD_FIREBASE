@@ -1,5 +1,6 @@
 package com.example.accesodatos
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,6 +64,11 @@ class VerJuegosActivity : AppCompatActivity() {
                 return true
             }
         })
+        //Boton atras
+        binding.btnAtras.setOnClickListener {
+            val intent = Intent(this@VerJuegosActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
 
 
     }
