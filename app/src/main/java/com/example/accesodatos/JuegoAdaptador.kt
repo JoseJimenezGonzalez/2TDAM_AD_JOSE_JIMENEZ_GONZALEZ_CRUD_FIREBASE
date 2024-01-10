@@ -8,8 +8,11 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 
 class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.Adapter<JuegoAdaptador.JuegoViewHolder>(), Filterable{
     private lateinit var contexto: Context
@@ -43,6 +46,16 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
             .apply(Utilidades.opcionesGlide(contexto))
             .transition(Utilidades.transicion)
             .into(holder.miniatura)
+
+        holder.eliminar.setOnClickListener {
+            val dbRef = FirebaseDatabase.getInstance().getReference()
+            val stoRef = FirebaseStorage.getInstance().getReference()
+            listaFiltrada.remove(itemActual)
+            stoRef.child("PS2").child("covers").child(itemActual.id!!).delete()
+            dbRef.child("PS2").child("juegos").child(itemActual.id!!).removeValue()
+
+            Toast.makeText(contexto,"Juego borrado con exito", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun getItemCount(): Int = listaFiltrada.size
@@ -55,6 +68,8 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
         val edadRecomendadaJuego: TextView = itemView.findViewById(R.id.tvEdad)
         val fechaSalidaJuego: TextView = itemView.findViewById(R.id.tvFechaSalida)
         //Falta el rating bar que a los demas les ha dado problemas
+        val editar: ImageView = itemView.findViewById(R.id.ivEditar)
+        val eliminar: ImageView = itemView.findViewById(R.id.ivBorrar)
     }
 
     override fun getFilter(): Filter {
@@ -79,4 +94,18 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
             }
         }
     }
+
+    // Método para filtrar la lista
+    fun filter(newText: String) {
+        val busqueda = newText.lowercase()
+        if (busqueda.isEmpty()) {
+            listaFiltrada = listaJuegos
+        } else {
+            listaFiltrada = listaJuegos.filter {
+                it.nombre.toString().lowercase().contains(busqueda)
+            }.toMutableList()
+        }
+        notifyDataSetChanged()
+    }
+
 }

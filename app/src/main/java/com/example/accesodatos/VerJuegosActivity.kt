@@ -4,8 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.accesodatos.databinding.ActivityCrearJuegoBinding
-import com.example.accesodatos.databinding.ActivityMainBinding
+import androidx.appcompat.widget.SearchView
 import com.example.accesodatos.databinding.ActivityVerJuegosBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -52,6 +51,18 @@ class VerJuegosActivity : AppCompatActivity() {
         recycler.adapter = adaptador
         recycler.layoutManager = LinearLayoutManager(applicationContext)
         recycler.setHasFixedSize(true)
+
+        // Configurar el SearchView
+        binding.svJuegos.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adaptador.filter(newText.orEmpty())
+                return true
+            }
+        })
 
 
     }
