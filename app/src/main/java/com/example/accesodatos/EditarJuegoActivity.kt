@@ -4,24 +4,29 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.bumptech.glide.Glide
 import com.example.accesodatos.databinding.ActivityEditarJuegoBinding
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.coroutines.CoroutineContext
 
-class EditarJuegoActivity : AppCompatActivity() {
+class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var binding: ActivityEditarJuegoBinding
 
@@ -33,6 +38,12 @@ class EditarJuegoActivity : AppCompatActivity() {
     private lateinit var listaJuegos: MutableList<Juego>
 
     private lateinit var job: Job
+
+    private var esFechaValida = false
+    private var fechaLanzamientoFormateada = ""
+
+    private var opcionSeleccionadaGenero: String = ""
+    private var opcionSeleccionadaEdad: String = ""
 
     private val opcionesGeneroJuegos = arrayOf(
         "Acción",
@@ -110,6 +121,83 @@ class EditarJuegoActivity : AppCompatActivity() {
         // Recuperar la posición guardada y establecerla en el Spinner
         binding.spinnerGenero.setSelection(posicionGeneroDelJuego)
 
+        //Guardamos la eleccion del spinner edad
+        spinnerEdades.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: android.view.View?,
+                position: Int,
+                id: Long
+            ) {
+                // Obtener la opción seleccionada
+                val selectedItem = opcionesGeneroJuegos[position]
+
+                // Asignar la opción seleccionada
+                opcionSeleccionadaGenero = selectedItem
+
+                // Mostrar la opción seleccionada
+                Toast.makeText(
+                    this@EditarJuegoActivity,
+                    "Seleccionaste: $selectedItem",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Manejar caso en que no se selecciona nada
+            }
+        }
+
+        //Guardamos la eleccion del spinner genero
+        spinnerGeneros.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: android.view.View?,
+                position: Int,
+                id: Long
+            ) {
+                // Obtener la opción seleccionada
+                val selectedItem = opcionesGeneroJuegos[position]
+
+                // Asignar la opción seleccionada
+                opcionSeleccionadaGenero = selectedItem
+
+                // Mostrar la opción seleccionada
+                Toast.makeText(
+                    this@EditarJuegoActivity,
+                    "Seleccionaste: $selectedItem",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Manejar caso en que no se selecciona nada
+            }
+        }
+
+
+        //Fecha lanzamiento
+        binding.tietFechaLanzamiento.setOnClickListener {
+            val builder = MaterialDatePicker.Builder.datePicker()
+            val picker = builder.build()
+
+            picker.addOnPositiveButtonClickListener { selectedDateInMillis ->
+                val selectedDate = Date(selectedDateInMillis)
+                val currentDate = Date()
+
+                if(currentDate.after(selectedDate)){
+                    esFechaValida = true
+                    fechaLanzamientoFormateada = obtenerFechaLanzamientoFormateada(selectedDate)
+                    binding.tietFechaLanzamiento.setText(fechaLanzamientoFormateada)
+                }else{
+                    Toast.makeText(this, "Fecha de lanzamiento erronea", Toast.LENGTH_SHORT).show()
+                    esFechaValida = false
+                }
+            }
+
+            picker.show(supportFragmentManager, "jeje")
+        }
+
         Glide.with(applicationContext)
             .load(pojoJuego.imagen)
             .apply(Utilidades.opcionesGlide(applicationContext))
@@ -122,7 +210,42 @@ class EditarJuegoActivity : AppCompatActivity() {
         listaJuegos = Utilidades.obtenerListaJuegos(dbRef)
 
         binding.btnIntroducirJuego.setOnClickListener {
+            //Varibles que estan el los edit text
+            var nombreJuego = binding.tietNombreJuego.text.toString()
+            var nombreEstudioDesarrollo = binding.tietNombreEstudio.text.toString()
+            var puntuacionRatingBar = binding.rbPuntuacion.rating.toString().toDouble()
+            if (nombreJuego.trim().isEmpty() || nombreEstudioDesarrollo.trim()
+                    .isEmpty() || fechaLanzamientoFormateada.isEmpty() || !esFechaValida
+            ) {
+                Toast.makeText(this, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
+            } else if (urlCover == null) {
+                Toast.makeText(this, "Falta seleccionar imagen", Toast.LENGTH_SHORT).show()
+            } else if (Utilidades.existeJuego(listaJuegos, nombreJuego.trim())) {
+                Toast.makeText(this, "Ese juego ya existe", Toast.LENGTH_SHORT).show()
+            } else {
+                var idGenerado: String? = dbRef.child("PS2").child("juegos").push().key
+                //GlobalScope(Dispatchers.IO)
+                launch {
+                    val urlCoverFirebase =
+                        Utilidades.guardarImagenCover(stRef, idGenerado!!, urlCover!!)
 
+                    Utilidades.escribirJuego(
+                        dbRef, idGenerado!!,
+                        nombreJuego.trim(),
+                        nombreEstudioDesarrollo.trim(),
+                        fechaLanzamientoFormateada,
+                        opcionSeleccionadaEdad,
+                        opcionSeleccionadaGenero,
+                        urlCoverFirebase,
+                        puntuacionRatingBar
+                    )
+                    Utilidades.tostadaCorrutina(
+                        thisActivity,
+                        applicationContext,
+                        "Juego modificado con exito"
+                    )
+                }
+            }
         }
         //Cuando le da click en la imagen para guardar imagen del juego
         binding.ivImagenJuego.setOnClickListener {
@@ -148,4 +271,7 @@ class EditarJuegoActivity : AppCompatActivity() {
         val formato = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
         return formato.format(fechaNacimiento)
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + job
 }

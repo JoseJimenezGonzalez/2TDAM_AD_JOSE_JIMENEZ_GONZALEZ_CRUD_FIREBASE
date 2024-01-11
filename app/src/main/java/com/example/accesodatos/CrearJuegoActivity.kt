@@ -102,7 +102,6 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
             startActivity(intent)
         }
         //Fecha lanzamiento
-        //Fecha de nacimiento
         binding.tietFechaLanzamiento.setOnClickListener {
             val builder = MaterialDatePicker.Builder.datePicker()
             val picker = builder.build()
