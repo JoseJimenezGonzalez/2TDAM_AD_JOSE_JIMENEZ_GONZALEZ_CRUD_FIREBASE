@@ -44,7 +44,18 @@ class Utilidades {
             return lista
         }
 
-        fun escribirJuego(dbRef: DatabaseReference, id:String, nombreJuego:String, nombreEstudioDesarrollador:String, fechaLanzamiento: String, edadRecomendada: String, genero: String, urlFirebase:String, puntuacionRatingBar: Double)=
+        fun escribirJuego(
+            dbRef: DatabaseReference,
+            id: String,
+            nombreJuego: String,
+            nombreEstudioDesarrollador: String,
+            fechaLanzamiento: String,
+            edadRecomendada: String,
+            genero: String,
+            urlFirebase: String,
+            puntuacionRatingBar: Double,
+            fechaFormateadaCreacionJuegoBaseDeDatos: String
+        )=
             dbRef.child("PS2").child("juegos").child(id).setValue(Juego(
                 id,
                 urlFirebase,
@@ -53,7 +64,8 @@ class Utilidades {
                 fechaLanzamiento,
                 genero,
                 edadRecomendada,
-                puntuacionRatingBar
+                puntuacionRatingBar,
+                fechaFormateadaCreacionJuegoBaseDeDatos
             ))
 
         fun modificarJuego(
@@ -65,7 +77,8 @@ class Utilidades {
             nuevoGenero: String,
             nuevaEdadRecomendada: String,
             nuevaUrlFirebase: String,
-            nuevaPuntuacionRatingBar: Double
+            nuevaPuntuacionRatingBar: Double,
+            nuevaFechaCreacionBaseDatos: String,
         ) =
             dbRef.child("PS2").child("juegos").child(id).setValue(
                 Juego(
@@ -76,7 +89,8 @@ class Utilidades {
                     nuevaFechaLanzamiento,
                     nuevoGenero,
                     nuevaEdadRecomendada,
-                    nuevaPuntuacionRatingBar
+                    nuevaPuntuacionRatingBar,
+                    nuevaFechaCreacionBaseDatos
                 )
             )
 

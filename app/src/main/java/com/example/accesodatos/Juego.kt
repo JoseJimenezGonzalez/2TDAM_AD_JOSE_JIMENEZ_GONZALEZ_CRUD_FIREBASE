@@ -12,6 +12,7 @@ data class Juego(
     val fechaLanzamiento: String? = null,
     val genero: String? = null,
     val edad: String? = null,
-    var ratingBar: Double? = null
+    var ratingBar: Double? = null,
+    var fechaCreacionBaseDatos: String? = null,
 ): Parcelable
 

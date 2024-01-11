@@ -42,6 +42,7 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
 
     private var esFechaValida = true
     private var fechaLanzamientoFormateada = ""
+    private var fechaCreacionBasedatos = ""
 
     private var opcionSeleccionadaGenero: String = ""
     private var opcionSeleccionadaEdad: String = ""
@@ -128,6 +129,7 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         binding.spinnerGenero.setSelection(posicionGeneroDelJuego)
 
 
+        fechaCreacionBasedatos = pojoJuego.fechaCreacionBaseDatos!!
 
         //Guardamos la eleccion del spinner edad
         spinnerEdades.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -236,7 +238,8 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
                         opcionSeleccionadaEdad,
                         opcionSeleccionadaGenero,
                         urlCoverFirebase,
-                        puntuacionRatingBar
+                        puntuacionRatingBar,
+                        fechaCreacionBasedatos
                     )
                     Utilidades.tostadaCorrutina(
                         thisActivity,
