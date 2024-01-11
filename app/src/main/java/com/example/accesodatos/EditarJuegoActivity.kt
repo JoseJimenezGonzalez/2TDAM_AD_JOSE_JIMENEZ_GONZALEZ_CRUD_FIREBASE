@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -39,7 +40,7 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var job: Job
 
-    private var esFechaValida = false
+    private var esFechaValida = true
     private var fechaLanzamientoFormateada = ""
 
     private var opcionSeleccionadaGenero: String = ""
@@ -93,10 +94,15 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
 
         pojoJuego = intent.getParcelableExtra<Juego>("juego")!!
 
+        opcionSeleccionadaGenero = pojoJuego.genero!!
+        opcionSeleccionadaEdad = pojoJuego.edad!!
+
         //Voy solo a por el nombre en principio
         binding.tietNombreJuego.setText(pojoJuego.nombre)
         binding.tietNombreEstudio.setText(pojoJuego.estudio)
         binding.tietFechaLanzamiento.setText(pojoJuego.fechaLanzamiento)
+        fechaLanzamientoFormateada = pojoJuego.fechaLanzamiento ?: ""
+        binding.rbPuntuacion.rating = pojoJuego.ratingBar?.toFloat() ?: 0.0f
         //Para los spinner tengo que obtener la posicion que ocupa
         //Posicion que ocupa la edad recomendada para jugar al juego
         var posicionEdadRecomendada = edadesRecomendadasJuegos.indexOf(pojoJuego.edad)
@@ -121,6 +127,8 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         // Recuperar la posición guardada y establecerla en el Spinner
         binding.spinnerGenero.setSelection(posicionGeneroDelJuego)
 
+
+
         //Guardamos la eleccion del spinner edad
         spinnerEdades.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -130,17 +138,10 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
                 id: Long
             ) {
                 // Obtener la opción seleccionada
-                val selectedItem = opcionesGeneroJuegos[position]
+                val selectedItem = edadesRecomendadasJuegos[position]
 
                 // Asignar la opción seleccionada
-                opcionSeleccionadaGenero = selectedItem
-
-                // Mostrar la opción seleccionada
-                Toast.makeText(
-                    this@EditarJuegoActivity,
-                    "Seleccionaste: $selectedItem",
-                    Toast.LENGTH_SHORT
-                ).show()
+                opcionSeleccionadaEdad = selectedItem
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -161,13 +162,6 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
 
                 // Asignar la opción seleccionada
                 opcionSeleccionadaGenero = selectedItem
-
-                // Mostrar la opción seleccionada
-                Toast.makeText(
-                    this@EditarJuegoActivity,
-                    "Seleccionaste: $selectedItem",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -218,19 +212,24 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
                     .isEmpty() || fechaLanzamientoFormateada.isEmpty() || !esFechaValida
             ) {
                 Toast.makeText(this, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
-            } else if (urlCover == null) {
-                Toast.makeText(this, "Falta seleccionar imagen", Toast.LENGTH_SHORT).show()
-            } else if (Utilidades.existeJuego(listaJuegos, nombreJuego.trim())) {
+            } else if (Utilidades.existeJuego(listaJuegos, nombreJuego.trim()) && !(nombreJuego == pojoJuego.nombre)) {
                 Toast.makeText(this, "Ese juego ya existe", Toast.LENGTH_SHORT).show()
             } else {
-                var idGenerado: String? = dbRef.child("PS2").child("juegos").push().key
+                var urlCoverFirebase = String()
+                var idJuego = pojoJuego.id
+                //Chivato
+                Log.d("opcionEdad", opcionSeleccionadaEdad)
+                Log.d("opcionGenero", opcionSeleccionadaGenero)
                 //GlobalScope(Dispatchers.IO)
                 launch {
-                    val urlCoverFirebase =
-                        Utilidades.guardarImagenCover(stRef, idGenerado!!, urlCover!!)
-
-                    Utilidades.escribirJuego(
-                        dbRef, idGenerado!!,
+                    if(urlCover == null){
+                        urlCoverFirebase = pojoJuego.imagen!!
+                    }else{
+                        val urlCoverFirebase = Utilidades.guardarImagenCover(stRef, pojoJuego.id!!, urlCover!!)
+                    }
+                    Utilidades.modificarJuego(
+                        dbRef,
+                        idJuego!!,
                         nombreJuego.trim(),
                         nombreEstudioDesarrollo.trim(),
                         fechaLanzamientoFormateada,

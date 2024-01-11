@@ -56,6 +56,33 @@ class Utilidades {
                 puntuacionRatingBar
             ))
 
+        fun modificarJuego(
+            dbRef: DatabaseReference,
+            id: String,
+            nuevoNombreJuego: String,
+            nuevoNombreEstudioDesarrollador: String,
+            nuevaFechaLanzamiento: String,
+            nuevoGenero: String,
+            nuevaEdadRecomendada: String,
+            nuevaUrlFirebase: String,
+            nuevaPuntuacionRatingBar: Double
+        ) =
+            dbRef.child("PS2").child("juegos").child(id).setValue(
+                Juego(
+                    id,
+                    nuevaUrlFirebase,
+                    nuevoNombreJuego,
+                    nuevoNombreEstudioDesarrollador,
+                    nuevaFechaLanzamiento,
+                    nuevoGenero,
+                    nuevaEdadRecomendada,
+                    nuevaPuntuacionRatingBar
+                )
+            )
+
+
+
+
         suspend fun guardarImagenCover(stoRef: StorageReference, id:String, imagen: Uri):String{
             lateinit var urlCoverFirebase: Uri
 
