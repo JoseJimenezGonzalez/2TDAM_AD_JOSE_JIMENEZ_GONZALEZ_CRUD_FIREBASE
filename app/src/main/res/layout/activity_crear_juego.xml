@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CrearJuegoActivity">
+    tools:context=".CrearJuegoActivity"
+    android:background="#009688">
 
     <TextView
         android:id="@+id/tvTitulo"
@@ -186,7 +187,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Añadir juego">
+        android:text="Añadir juego"
+        android:backgroundTint="#004D40">
     </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

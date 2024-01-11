@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VerJuegosActivity">
+    tools:context=".VerJuegosActivity"
+    android:background="#009688">
 
     <ImageView
         android:id="@+id/ivFiltrar"
@@ -43,7 +44,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Volver">
+        android:text="Volver"
+        android:backgroundTint="#004D40">
     </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
