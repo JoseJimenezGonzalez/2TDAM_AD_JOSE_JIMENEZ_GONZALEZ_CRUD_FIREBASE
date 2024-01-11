@@ -5,27 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@drawable/background_ps2">
+    android:background="#009688">
 
-    <ImageView
-        android:id="@+id/ivLogoPS2"
+    <TextView
+        android:id="@+id/tvLogo"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ps2_logo">
-    </ImageView>
+        app:layout_constraintBottom_toTopOf="@id/btnAddJuego"
+        android:text="App Collection"
+        android:textSize="56sp"
+        android:textColor="@color/black">
+    </TextView>
+
+    <TextView
+        android:id="@+id/tvDescripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvLogo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnAddJuego"
+        android:padding="20dp"
+        android:textColor="@color/black"
+        android:text="Con esta app podrás saber en todo momento que juegos tienes en tu colección">
+    </TextView>
 
     <Button
         android:id="@+id/btnAddJuego"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/ivLogoPS2"
+        app:layout_constraintTop_toBottomOf="@id/tvDescripcion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnVerJuegos"
-        android:text="Añadir juego">
+        android:text="Añadir juego"
+        android:backgroundTint="#004D40">
     </Button>
 
     <Button
@@ -36,7 +53,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnAddJuego"
-        android:text="Ver juegos">
+        android:text="Ver juegos"
+        android:backgroundTint="#004D40">
     </Button>
 
 
