@@ -69,7 +69,5 @@ class VerJuegosActivity : AppCompatActivity() {
             val intent = Intent(this@VerJuegosActivity, MainActivity::class.java)
             startActivity(intent)
         }
-
-
     }
 }

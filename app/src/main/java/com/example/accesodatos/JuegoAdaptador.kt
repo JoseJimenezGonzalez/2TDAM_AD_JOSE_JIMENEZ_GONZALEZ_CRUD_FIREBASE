@@ -1,12 +1,14 @@
 package com.example.accesodatos
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +37,7 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
         holder.generoJuego.text = itemActual.genero
         holder.edadRecomendadaJuego.text = itemActual.edad
         holder.fechaSalidaJuego.text = itemActual.fechaLanzamiento
+        holder.puntuacion.rating = itemActual.ratingBar?.toFloat() ?: 0.0f
 
         val URL: String? = when(itemActual.imagen){
             "" -> null
@@ -46,6 +49,12 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
             .apply(Utilidades.opcionesGlide(contexto))
             .transition(Utilidades.transicion)
             .into(holder.miniatura)
+
+        holder.editar.setOnClickListener {
+            val activity = Intent(contexto, EditarJuegoActivity::class.java)
+            activity.putExtra("juego", itemActual)
+            contexto.startActivity(activity)
+        }
 
         holder.eliminar.setOnClickListener {
             val dbRef = FirebaseDatabase.getInstance().getReference()
@@ -67,6 +76,7 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
         val generoJuego: TextView = itemView.findViewById(R.id.tvGeneroJuego)
         val edadRecomendadaJuego: TextView = itemView.findViewById(R.id.tvEdad)
         val fechaSalidaJuego: TextView = itemView.findViewById(R.id.tvFechaSalida)
+        var puntuacion: RatingBar = itemView.findViewById(R.id.rbPuntuacion)
         //Falta el rating bar que a los demas les ha dado problemas
         val editar: ImageView = itemView.findViewById(R.id.ivEditar)
         val eliminar: ImageView = itemView.findViewById(R.id.ivBorrar)

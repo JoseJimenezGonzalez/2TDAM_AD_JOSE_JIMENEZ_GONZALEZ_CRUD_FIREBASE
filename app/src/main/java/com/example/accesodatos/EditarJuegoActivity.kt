@@ -1,23 +1,32 @@
 package com.example.accesodatos
 
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.Spinner
+import androidx.activity.result.contract.ActivityResultContracts
 import com.bumptech.glide.Glide
 import com.example.accesodatos.databinding.ActivityEditarJuegoBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlin.coroutines.CoroutineContext
 
 class EditarJuegoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditarJuegoBinding
 
     private var urlCover: Uri? = null
+    private lateinit var cover: ImageView
     private lateinit var dbRef: DatabaseReference
     private lateinit var stRef: StorageReference
     private  lateinit var  pojoJuego:Juego
@@ -115,5 +124,28 @@ class EditarJuegoActivity : AppCompatActivity() {
         binding.btnIntroducirJuego.setOnClickListener {
 
         }
+        //Cuando le da click en la imagen para guardar imagen del juego
+        binding.ivImagenJuego.setOnClickListener {
+            accesoGaleria.launch("image/*")
+        }
+        binding.ivBack.setOnClickListener {
+            val intent = Intent(this, VerJuegosActivity::class.java)
+            startActivity(intent)
+        }
+    }
+    private val accesoGaleria = registerForActivityResult(ActivityResultContracts.GetContent())
+    { uri: Uri? ->
+        if (uri != null) {
+            urlCover = uri
+            cover.setImageURI(uri)
+        }
+    }
+    override fun onDestroy() {
+        job.cancel()
+        super.onDestroy()
+    }
+    fun obtenerFechaLanzamientoFormateada(fechaNacimiento: Date): String {
+        val formato = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+        return formato.format(fechaNacimiento)
     }
 }
