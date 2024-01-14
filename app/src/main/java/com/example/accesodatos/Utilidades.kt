@@ -24,7 +24,7 @@ class Utilidades {
 
 
         fun obtenerListaJuegos(dbRef: DatabaseReference):MutableList<Juego>{
-            var lista = mutableListOf<Juego>()
+            val lista = mutableListOf<Juego>()
 
             dbRef.child("PS2")
                 .child("juegos")
@@ -98,9 +98,8 @@ class Utilidades {
 
 
         suspend fun guardarImagenCover(stoRef: StorageReference, id:String, imagen: Uri):String{
-            lateinit var urlCoverFirebase: Uri
 
-            urlCoverFirebase=stoRef.child("PS2").child("covers").child(id)
+            val urlCoverFirebase: Uri = stoRef.child("PS2").child("covers").child(id)
                 .putFile(imagen).await().storage.downloadUrl.await()
 
             return urlCoverFirebase.toString()
@@ -116,7 +115,7 @@ class Utilidades {
             }
         }
 
-        fun animacion_carga(contexto: Context): CircularProgressDrawable{
+        fun animacionCarga(contexto: Context): CircularProgressDrawable{
             val animacion = CircularProgressDrawable(contexto)
             animacion.strokeWidth = 5f
             animacion.centerRadius = 30f
@@ -127,11 +126,10 @@ class Utilidades {
         val transicion = DrawableTransitionOptions.withCrossFade(500)
 
         fun opcionesGlide(context: Context): RequestOptions {
-            val options = RequestOptions()
-                .placeholder(animacion_carga(context))
+            return RequestOptions()
+                .placeholder(animacionCarga(context))
                 .fallback(R.drawable.ic_ps2_mando)
                 .error(R.drawable.error_404)
-            return options
         }
     }
 }

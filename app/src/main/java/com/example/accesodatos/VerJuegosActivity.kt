@@ -84,41 +84,37 @@ class VerJuegosActivity : AppCompatActivity() {
         val popupMenu = view?.let { PopupMenu(this, it) }
 
         // Inflar el menú desde el archivo XML
-        if (popupMenu != null) {
-            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
-        }
+        popupMenu?.menuInflater?.inflate(R.menu.popup_menu, popupMenu.menu)
 
         // Establecer un listener para manejar clics en las opciones del menú
-        if (popupMenu != null) {
-            popupMenu.setOnMenuItemClickListener { menuItem: MenuItem ->
-                when (menuItem.itemId) {
-                    R.id.action_sort_aph -> {
-                        // Lógica para la opción "ordenar alfabeticamente"
-                        // Puedes implementar lo que necesites aquí
+        popupMenu?.setOnMenuItemClickListener { menuItem: MenuItem ->
+            when (menuItem.itemId) {
+                R.id.action_sort_aph -> {
+                    // Lógica para la opción "ordenar alfabeticamente"
+                    // Puedes implementar lo que necesites aquí
 
-                        lista.sortBy { juego->
-                            juego.nombre
-                        }
-                        recycler.adapter?.notifyDataSetChanged()
-                        true
+                    lista.sortBy { juego->
+                        juego.nombre
                     }
-                    R.id.action_sort_rating -> {
-                        // Lógica para la opción "ordenar por puntuacion"
-                        // Puedes implementar lo que necesites aquí
-                        lista.sortByDescending { juego->
-                            juego.ratingBar
-                        }
-                        recycler.adapter?.notifyDataSetChanged()
-                        true
-                    }
-                    else -> false
+                    recycler.adapter?.notifyDataSetChanged()
+                    true
                 }
+
+                R.id.action_sort_rating -> {
+                    // Lógica para la opción "ordenar por puntuacion"
+                    // Puedes implementar lo que necesites aquí
+                    lista.sortByDescending { juego->
+                        juego.ratingBar
+                    }
+                    recycler.adapter?.notifyDataSetChanged()
+                    true
+                }
+
+                else -> false
             }
         }
 
         // Mostrar el menú emergente
-        if (popupMenu != null) {
-            popupMenu.show()
-        }
+        popupMenu?.show()
     }
 }
