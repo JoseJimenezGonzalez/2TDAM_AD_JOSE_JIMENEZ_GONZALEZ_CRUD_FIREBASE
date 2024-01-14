@@ -2,8 +2,10 @@ package com.example.accesodatos
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build.VERSION.SDK_INT
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -93,7 +95,7 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         val thisActivity = this
         job = Job()
 
-        pojoJuego = intent.getParcelableExtra<Juego>("juego")!!
+        pojoJuego = intent.parcelable("juego")!!
 
         opcionSeleccionadaGenero = pojoJuego.genero!!
         opcionSeleccionadaEdad = pojoJuego.edad!!
@@ -200,8 +202,8 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
             .transition(Utilidades.transicion)
             .into(binding.ivImagenJuego)
 
-        dbRef = FirebaseDatabase.getInstance().getReference()
-        stRef = FirebaseStorage.getInstance().getReference()
+        dbRef = FirebaseDatabase.getInstance().reference
+        stRef = FirebaseStorage.getInstance().reference
 
         listaJuegos = Utilidades.obtenerListaJuegos(dbRef)
 
@@ -214,7 +216,7 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
                     .isEmpty() || fechaLanzamientoFormateada.isEmpty() || !esFechaValida
             ) {
                 Toast.makeText(this, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
-            } else if (Utilidades.existeJuego(listaJuegos, nombreJuego.trim()) && !(nombreJuego == pojoJuego.nombre)) {
+            } else if (Utilidades.existeJuego(listaJuegos, nombreJuego.trim()) && nombreJuego != pojoJuego.nombre) {
                 Toast.makeText(this, "Ese juego ya existe", Toast.LENGTH_SHORT).show()
             } else {
                 var urlCoverFirebase = String()
@@ -258,6 +260,17 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
             startActivity(intent)
         }
     }
+    //La extension de funcion parcelable utilizara el metodo adecuado segun la version de la API
+    inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+        SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
+        else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
+    }
+
+    inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
+        SDK_INT >= 33 -> getParcelable(key, T::class.java)
+        else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+    }
+
     private val accesoGaleria = registerForActivityResult(ActivityResultContracts.GetContent())
     { uri: Uri? ->
         if (uri != null) {
@@ -269,7 +282,7 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         job.cancel()
         super.onDestroy()
     }
-    fun obtenerFechaLanzamientoFormateada(fechaNacimiento: Date): String {
+    private fun obtenerFechaLanzamientoFormateada(fechaNacimiento: Date): String {
         val formato = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
         return formato.format(fechaNacimiento)
     }

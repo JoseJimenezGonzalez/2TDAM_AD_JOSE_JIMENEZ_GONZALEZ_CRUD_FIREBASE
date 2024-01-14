@@ -31,6 +31,13 @@ class VerJuegosActivity : AppCompatActivity() {
         binding = ActivityVerJuegosBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        configurarSearchView()
+        configurarBotonBack()
+        configurarMenuPopup()
+        configurarRecyclerView()
+    }
+
+    private fun configurarRecyclerView() {
         lista = mutableListOf()
         dbRef = FirebaseDatabase.getInstance().getReference()
 
@@ -55,7 +62,24 @@ class VerJuegosActivity : AppCompatActivity() {
         recycler.adapter = adaptador
         recycler.layoutManager = LinearLayoutManager(applicationContext)
         recycler.setHasFixedSize(true)
+    }
 
+    private fun configurarMenuPopup() {
+        //Boton popup
+        binding.ivFiltrar.setOnClickListener {
+            showPopupMenu(it)
+        }
+    }
+
+    private fun configurarBotonBack() {
+        //Boton atras
+        binding.btnAtras.setOnClickListener {
+            val intent = Intent(this@VerJuegosActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun configurarSearchView() {
         // Configurar el SearchView
         binding.svJuegos.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -67,16 +91,6 @@ class VerJuegosActivity : AppCompatActivity() {
                 return true
             }
         })
-        //Boton atras
-        binding.btnAtras.setOnClickListener {
-            val intent = Intent(this@VerJuegosActivity, MainActivity::class.java)
-            startActivity(intent)
-        }
-        
-        //Boton popup
-        binding.ivFiltrar.setOnClickListener { 
-            showPopupMenu(it)
-        }
     }
 
     private fun showPopupMenu(view: View?) {
