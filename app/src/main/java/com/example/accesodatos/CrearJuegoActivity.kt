@@ -112,11 +112,11 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
         //Cuando le da click al boton de guardar juego
         binding.btnIntroducirJuego.setOnClickListener {
             //Varibles que estan el los edit text
-            var nombreJuego = binding.tietNombreJuego.text.toString()
-            var nombreEstudioDesarrollo = binding.tietNombreEstudio.text.toString()
-            var puntuacionRatingBar = binding.rbPuntuacion.rating.toString().toDouble()
-            var fechaCreacionEnBaseDeDatos = Date()
-            var fechaFormateadaCreacionJuegoBaseDeDatos = obtenerFechaLanzamientoFormateada(fechaCreacionEnBaseDeDatos)
+            val nombreJuego = binding.tietNombreJuego.text.toString()
+            val nombreEstudioDesarrollo = binding.tietNombreEstudio.text.toString()
+            val puntuacionRatingBar = binding.rbPuntuacion.rating.toString().toDouble()
+            val fechaCreacionEnBaseDeDatos = Date()
+            val fechaFormateadaCreacionJuegoBaseDeDatos = obtenerFechaLanzamientoFormateada(fechaCreacionEnBaseDeDatos)
             if (nombreJuego.trim().isEmpty() || nombreEstudioDesarrollo.trim()
                     .isEmpty() || fechaLanzamientoFormateada.isEmpty() || !esFechaValida
             ) {
@@ -270,9 +270,8 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
         job.cancel()
         super.onDestroy()
     }
-    private fun obtenerFechaLanzamientoFormateada(fechaNacimiento: Date): String {
-        val formato = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-        return formato.format(fechaNacimiento)
+    private fun obtenerFechaLanzamientoFormateada(fechaLanzamiento: Date): String {
+        return SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(fechaLanzamiento)
     }
 
     private val accesoGaleria = registerForActivityResult(ActivityResultContracts.GetContent())
