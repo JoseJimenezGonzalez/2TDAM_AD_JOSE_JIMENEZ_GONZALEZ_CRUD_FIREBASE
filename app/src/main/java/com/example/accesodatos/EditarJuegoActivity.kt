@@ -48,7 +48,8 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
     private  lateinit var pojoJuego:Juego
     private lateinit var listaJuegos: MutableList<Juego>
 
-    private lateinit var job: Job
+    @Inject
+    lateinit var job: Job
 
     private var esFechaValida = true
     private var fechaLanzamientoFormateada = ""
@@ -100,7 +101,6 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         binding = ActivityEditarJuegoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        job = Job()
         pojoJuego = intent.parcelable("juego")!!
         fechaCreacionBasedatos = pojoJuego.fechaCreacionBaseDatos!!
 

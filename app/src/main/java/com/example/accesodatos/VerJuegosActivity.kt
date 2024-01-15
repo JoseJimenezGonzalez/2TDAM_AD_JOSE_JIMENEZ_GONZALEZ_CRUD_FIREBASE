@@ -132,7 +132,6 @@ class VerJuegosActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
         // Mostrar el menú emergente
         popupMenu?.show()
     }

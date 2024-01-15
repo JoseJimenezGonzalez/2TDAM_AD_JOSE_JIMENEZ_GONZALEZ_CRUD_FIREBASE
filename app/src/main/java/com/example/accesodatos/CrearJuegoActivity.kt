@@ -28,6 +28,8 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
+//La anotación @AndroidEntryPoint es parte de Dagger Hilt y se utiliza en clases de Android para
+//habilitar la inyección de dependencias en esas clases.
 @AndroidEntryPoint
 class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
 
@@ -44,7 +46,9 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
     @Inject
     lateinit var stRef: StorageReference
 
-    private lateinit var job: Job
+    @Inject
+    lateinit var job: Job
+
     private var esFechaValida = false
     private var fechaLanzamientoFormateada = ""
 
@@ -94,9 +98,7 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
         binding = ActivityCrearJuegoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        job = Job()
         cover = binding.ivImagenJuego
-
 
         listaJuegos = Utilidades.obtenerListaJuegos(dbRef)
 
