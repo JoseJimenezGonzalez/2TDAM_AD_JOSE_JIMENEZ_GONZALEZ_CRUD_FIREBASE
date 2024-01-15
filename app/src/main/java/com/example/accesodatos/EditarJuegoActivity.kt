@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -27,16 +28,23 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
+@AndroidEntryPoint
 class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var binding: ActivityEditarJuegoBinding
 
     private var urlCover: Uri? = null
     private lateinit var cover: ImageView
-    private lateinit var dbRef: DatabaseReference
-    private lateinit var stRef: StorageReference
+
+    @Inject
+    lateinit var dbRef: DatabaseReference
+
+    @Inject
+    lateinit var stRef: StorageReference
+
     private  lateinit var pojoJuego:Juego
     private lateinit var listaJuegos: MutableList<Juego>
 
@@ -95,8 +103,7 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         pojoJuego = intent.parcelable("juego")!!
         fechaCreacionBasedatos = pojoJuego.fechaCreacionBaseDatos!!
-        dbRef = FirebaseDatabase.getInstance().reference
-        stRef = FirebaseStorage.getInstance().reference
+
         listaJuegos = Utilidades.obtenerListaJuegos(dbRef)
 
         configuracionInicialUI()

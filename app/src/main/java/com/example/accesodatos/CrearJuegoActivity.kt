@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -24,18 +25,24 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
+@AndroidEntryPoint
+class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
 
     private lateinit var binding: ActivityCrearJuegoBinding
 
     private var urlImagen: Uri? = null
-    private lateinit var dbRef: DatabaseReference
-    private lateinit var stRef: StorageReference
     private lateinit var cover: ImageView
     private lateinit var listaJuegos: MutableList<Juego>
 
+
+    @Inject
+    lateinit var dbRef: DatabaseReference
+
+    @Inject
+    lateinit var stRef: StorageReference
 
     private lateinit var job: Job
     private var esFechaValida = false
@@ -89,8 +96,8 @@ class CrearJuegoActivity : AppCompatActivity(), CoroutineScope {
 
         job = Job()
         cover = binding.ivImagenJuego
-        dbRef = FirebaseDatabase.getInstance().reference
-        stRef = FirebaseStorage.getInstance().reference
+
+
         listaJuegos = Utilidades.obtenerListaJuegos(dbRef)
 
         configurarSpinnerGenero()

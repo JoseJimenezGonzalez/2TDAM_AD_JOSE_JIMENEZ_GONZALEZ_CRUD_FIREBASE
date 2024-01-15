@@ -15,7 +15,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.StorageReference
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class VerJuegosActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVerJuegosBinding
@@ -23,7 +27,9 @@ class VerJuegosActivity : AppCompatActivity() {
     private lateinit var recycler: RecyclerView
     private  lateinit var lista:MutableList<Juego>
     private lateinit var adaptador: JuegoAdaptador
-    private lateinit var dbRef: DatabaseReference
+
+    @Inject
+    lateinit var dbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +45,6 @@ class VerJuegosActivity : AppCompatActivity() {
 
     private fun configurarRecyclerView() {
         lista = mutableListOf()
-        dbRef = FirebaseDatabase.getInstance().getReference()
 
         dbRef.child("PS2").child("juegos").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {

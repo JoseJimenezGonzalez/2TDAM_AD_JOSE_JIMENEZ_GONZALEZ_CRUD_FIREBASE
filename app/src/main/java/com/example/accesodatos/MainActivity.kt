@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.accesodatos.databinding.ActivityCrearJuegoBinding
 import com.example.accesodatos.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 class MainActivity : AppCompatActivity() {
 
