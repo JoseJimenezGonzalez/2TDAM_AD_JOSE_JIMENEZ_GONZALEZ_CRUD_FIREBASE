@@ -110,8 +110,6 @@ class VerJuegosActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.action_sort_aph -> {
                     // Lógica para la opción "ordenar alfabeticamente"
-                    // Puedes implementar lo que necesites aquí
-
                     lista.sortBy { juego->
                         juego.nombre
                     }
@@ -121,7 +119,6 @@ class VerJuegosActivity : AppCompatActivity() {
 
                 R.id.action_sort_rating -> {
                     // Lógica para la opción "ordenar por puntuacion"
-                    // Puedes implementar lo que necesites aquí
                     lista.sortByDescending { juego->
                         juego.ratingBar
                     }
@@ -130,8 +127,7 @@ class VerJuegosActivity : AppCompatActivity() {
                 }
 
                 R.id.action_sort_date -> {
-                    // Lógica para la opción "ordenar por puntuacion"
-                    // Puedes implementar lo que necesites aquí
+                    // Lógica para la opción "ordenar por fecha de lanzamiento"
                     lista.sortByDescending { juego->
                         juego.fechaLanzamiento
                     }

@@ -77,7 +77,6 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
         val edadRecomendadaJuego: TextView = itemView.findViewById(R.id.tvEdad)
         val fechaSalidaJuego: TextView = itemView.findViewById(R.id.tvFechaSalida)
         var puntuacion: RatingBar = itemView.findViewById(R.id.rbPuntuacion)
-        //Falta el rating bar que a los demas les ha dado problemas
         val editar: ImageView = itemView.findViewById(R.id.ivEditar)
         val eliminar: ImageView = itemView.findViewById(R.id.ivBorrar)
     }
