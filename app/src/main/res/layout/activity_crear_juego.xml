@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CrearJuegoActivity"
-    android:background="#009688">
+    android:background="#FEDBD0">
 
     <TextView
         android:id="@+id/tvTitulo"
@@ -179,7 +179,7 @@
         </RatingBar>
     </LinearLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnIntroducirJuego"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -188,7 +188,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="Añadir juego"
-        android:backgroundTint="#004D40">
-    </Button>
+        android:textColor="@color/black"
+        android:background="@drawable/btn_rounded_background"
+        android:elevation="4dp"
+        android:padding="10dp">
+    </androidx.appcompat.widget.AppCompatButton>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

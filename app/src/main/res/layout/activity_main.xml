@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="#009688">
+    android:background="#FEDBD0">
 
     <TextView
         android:id="@+id/tvLogo"
@@ -33,8 +33,9 @@
         android:text="Con esta app podrás saber en todo momento que juegos tienes en tu colección">
     </TextView>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAddJuego"
+        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tvDescripcion"
@@ -42,10 +43,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnVerJuegos"
         android:text="Añadir juego"
-        android:backgroundTint="#004D40">
-    </Button>
+        android:textColor="@color/black"
+        android:background="@drawable/btn_rounded_background"
+        android:elevation="4dp">
+    </androidx.appcompat.widget.AppCompatButton>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnVerJuegos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,8 +57,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnAddJuego"
         android:text="Ver juegos"
-        android:backgroundTint="#004D40">
-    </Button>
+        android:textColor="@color/black"
+        android:background="@drawable/btn_rounded_background"
+        android:elevation="4dp"
+        android:padding="10dp">
+    </androidx.appcompat.widget.AppCompatButton>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
