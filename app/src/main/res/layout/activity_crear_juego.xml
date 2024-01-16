@@ -51,12 +51,15 @@
         android:layout_height="wrap_content"
         android:hint="Introduce el nombre del juego"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:textColorHint="@color/black"
+        app:hintTextColor="@color/black">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tietNombreJuego"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text">
+            android:inputType="text"
+            android:textColor="@color/black">
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,12 +74,15 @@
         android:layout_height="wrap_content"
         android:hint="Introduce el nombre del estudio de desarrollo"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:textColorHint="@color/black"
+        app:hintTextColor="@color/black">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tietNombreEstudio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text">
+            android:inputType="text"
+            android:textColor="@color/black">
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -91,13 +97,14 @@
         android:layout_height="wrap_content"
         android:hint="Introduce fecha lanzamiento"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:textColorHint="@color/black">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tietFechaLanzamiento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="date"
-            android:focusable="false" >
+            android:focusable="false">
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
