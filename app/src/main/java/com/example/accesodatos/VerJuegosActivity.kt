@@ -129,6 +129,16 @@ class VerJuegosActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.action_sort_date -> {
+                    // Lógica para la opción "ordenar por puntuacion"
+                    // Puedes implementar lo que necesites aquí
+                    lista.sortByDescending { juego->
+                        juego.fechaLanzamiento
+                    }
+                    recycler.adapter?.notifyDataSetChanged()
+                    true
+                }
+
                 else -> false
             }
         }
