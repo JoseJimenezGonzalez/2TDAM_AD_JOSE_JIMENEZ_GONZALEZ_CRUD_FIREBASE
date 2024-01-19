@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragmentos.AgregarJuegoFragment"
-    android:background="#B2DFDB">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/tvTitulo"
@@ -44,7 +44,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:textColorHint="@color/black"
-        app:hintTextColor="@color/black">
+        app:hintTextColor="@color/black"
+        app:boxBackgroundColor="#EDE7F6">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tietNombreJuego"
             android:layout_width="match_parent"
@@ -67,6 +68,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:textColorHint="@color/black"
+        app:boxBackgroundColor="#EDE7F6"
         app:hintTextColor="@color/black">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tietNombreEstudio"
@@ -86,6 +88,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:boxBackgroundColor="#EDE7F6"
         android:hint="Introduce fecha lanzamiento"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -158,13 +161,14 @@
         app:layout_constraintTop_toBottomOf="@id/lySegundo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnIntroducirJuego"
+        app:layout_constraintBottom_toTopOf="@id/cvBoton"
         android:orientation="horizontal"
         android:gravity="center">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Puntuación:"
+            android:textSize="18sp"
             android:layout_marginRight="20dp">
         </TextView>
         <RatingBar
@@ -177,18 +181,25 @@
         </RatingBar>
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnIntroducirJuego"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvBoton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/lyTercero"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Añadir juego"
-        android:textColor="@color/black"
-        android:elevation="4dp"
-        android:padding="10dp">
-    </androidx.appcompat.widget.AppCompatButton>
+        app:cardCornerRadius="16dp">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnEditarJuego"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Editar juego"
+            android:textColor="@color/black"
+            android:background="#EDE7F6"
+            android:elevation="4dp"
+            android:padding="10dp">
+        </androidx.appcompat.widget.AppCompatButton>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

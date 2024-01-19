@@ -4,6 +4,9 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="fontFamily">@font/mina_regular</item>
+
+        <!-- Cambiar el color de la barra de notificaciones -->
+        <item name="android:statusBarColor">@color/white</item>
     </style>
 
     <style name="Theme.MyApplication" parent="Base.Theme.MyApplication" />

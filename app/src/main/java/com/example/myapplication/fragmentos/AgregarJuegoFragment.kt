@@ -127,7 +127,7 @@ class AgregarJuegoFragment : Fragment(), CoroutineScope {
 
     private fun configurarBotonIntroducirJuego() {
         //Cuando le da click al boton de guardar juego
-        binding.btnIntroducirJuego.setOnClickListener {
+        binding.btnEditarJuego.setOnClickListener {
             //Varibles que estan el los edit text
             val nombreJuego = binding.tietNombreJuego.text.toString()
             val nombreEstudioDesarrollo = binding.tietNombreEstudio.text.toString()
