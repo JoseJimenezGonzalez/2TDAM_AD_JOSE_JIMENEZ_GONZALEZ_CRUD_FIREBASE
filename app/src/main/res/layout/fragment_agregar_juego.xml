@@ -191,10 +191,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:cardCornerRadius="16dp">
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnEditarJuego"
+            android:id="@+id/btnAgregarJuego"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Editar juego"
+            android:text="Añadir juego"
             android:textColor="@color/black"
             android:background="#EDE7F6"
             android:elevation="4dp"

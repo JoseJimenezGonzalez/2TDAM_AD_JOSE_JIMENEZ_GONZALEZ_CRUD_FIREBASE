@@ -53,7 +53,6 @@ class VerJuegosFragment : Fragment() {
 
         //Codigo
         configurarSearchView()
-        configurarBotonBack()
         configurarMenuPopup()
         configurarRecyclerView()
 
@@ -64,7 +63,7 @@ class VerJuegosFragment : Fragment() {
         dbRef.child("PS2").child("juegos").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 lista.clear()
-                snapshot.children.forEach{hijo: DataSnapshot? ->
+                snapshot.children.forEach{ hijo: DataSnapshot? ->
                     val pojoJuego = hijo?.getValue(Juego::class.java)
                     lista.add(pojoJuego!!)
                 }
@@ -77,7 +76,7 @@ class VerJuegosFragment : Fragment() {
 
         })
 
-        adaptador = AdaptadorJuegoRecyclerView(lista, findNavController())
+        adaptador = AdaptadorJuegoRecyclerView(lista, findNavController(), binding.lySinJuegos)
         recycler = binding.rvVerJuegos
         recycler.adapter = adaptador
         recycler.layoutManager = LinearLayoutManager(context)
@@ -89,10 +88,6 @@ class VerJuegosFragment : Fragment() {
         binding.ivFiltrar.setOnClickListener {
             showPopupMenu(it)
         }
-    }
-
-    private fun configurarBotonBack() {
-        
     }
 
     private fun configurarSearchView() {

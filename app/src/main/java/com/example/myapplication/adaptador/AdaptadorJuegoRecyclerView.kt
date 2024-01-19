@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
@@ -23,7 +24,7 @@ import com.example.myapplication.utilidades.Utilidades
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
-class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, private val navController: NavController):RecyclerView.Adapter<AdaptadorJuegoRecyclerView.JuegoViewHolder>(), Filterable{
+class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, private val navController: NavController, private val linearLayout: LinearLayout):RecyclerView.Adapter<AdaptadorJuegoRecyclerView.JuegoViewHolder>(), Filterable{
 
     private lateinit var contexto: Context
     private var listaFiltrada = listaJuegos
@@ -78,8 +79,8 @@ class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, pr
 
             builder.setPositiveButton("Sí") { _, _ ->
                 // Acción para long click
-                val dbRef = FirebaseDatabase.getInstance().getReference()
-                val stoRef = FirebaseStorage.getInstance().getReference()
+                val dbRef = FirebaseDatabase.getInstance().reference
+                val stoRef = FirebaseStorage.getInstance().reference
                 listaFiltrada.remove(itemActual)
                 stoRef.child("PS2").child("covers").child(itemActual.id!!).delete()
                 dbRef.child("PS2").child("juegos").child(itemActual.id!!).removeValue()
@@ -146,5 +147,4 @@ class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, pr
         }
         notifyDataSetChanged()
     }
-
 }
