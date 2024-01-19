@@ -161,8 +161,8 @@ class AgregarJuegoFragment : Fragment(), CoroutineScope {
                         fechaFormateadaCreacionJuegoBaseDeDatos
                     )
                 }
-                // Otra forma de navegar desde FragmentA a FragmentB
-                findNavController().navigate(R.id.verJuegosFragment)
+                Toast.makeText(context, "Juego creado con éxito", Toast.LENGTH_SHORT).show()
+                limpiarCampos()
             }
         }
     }
@@ -268,6 +268,16 @@ class AgregarJuegoFragment : Fragment(), CoroutineScope {
     }
     private fun obtenerFechaLanzamientoFormateada(fechaLanzamiento: Date): String {
         return SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(fechaLanzamiento)
+    }
+
+    private fun limpiarCampos() {
+        binding.tietNombreJuego.text?.clear()
+        binding.tietNombreEstudio.text?.clear()
+        binding.rbPuntuacion.rating = 0.0f
+        binding.tietFechaLanzamiento.text?.clear()
+        binding.ivImagenJuego.setImageResource(R.drawable.ic_image_search)
+        binding.spinnerGenero.setSelection(0) // Seleccionar el primer elemento en el spinner
+        binding.spinnerEdad.setSelection(0)   // Seleccionar el primer elemento en el spinner
     }
 
     private val accesoGaleria = registerForActivityResult(ActivityResultContracts.GetContent())

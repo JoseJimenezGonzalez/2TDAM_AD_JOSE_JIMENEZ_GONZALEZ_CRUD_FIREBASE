@@ -32,13 +32,13 @@ class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, pr
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): AdaptadorJuegoRecyclerView.JuegoViewHolder {
+    ): JuegoViewHolder {
         val vistaItem = LayoutInflater.from(parent.context).inflate(R.layout.item_juego, parent, false)
         contexto = parent.context
         return JuegoViewHolder(vistaItem)
     }
 
-    override fun onBindViewHolder(holder: AdaptadorJuegoRecyclerView.JuegoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: JuegoViewHolder, position: Int) {
 
         val itemActual = listaFiltrada[position]
 
