@@ -1,21 +1,23 @@
-package com.example.accesodatos
+package com.example.myapplication.fragmentos
 
-import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.accesodatos.databinding.ActivityCrearJuegoBinding
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.myapplication.R
+import com.example.myapplication.databinding.FragmentAgregarJuegoBinding
+import com.example.myapplication.modelo.Juego
+import com.example.myapplication.utilidades.Utilidades
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -28,12 +30,11 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-//La anotación @AndroidEntryPoint es parte de Dagger Hilt y se utiliza en clases de Android para
-//habilitar la inyección de dependencias en esas clases.
 @AndroidEntryPoint
-class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
+class AgregarJuegoFragment : Fragment(), CoroutineScope {
 
-    private lateinit var binding: ActivityCrearJuegoBinding
+    private var _binding: FragmentAgregarJuegoBinding? = null
+    private val binding get() = _binding!!
 
     private var urlImagen: Uri? = null
     private lateinit var cover: ImageView
@@ -92,11 +93,18 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
         "Adultos (AO)",
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAgregarJuegoBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding = ActivityCrearJuegoBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //Codigo
 
         cover = binding.ivImagenJuego
 
@@ -105,9 +113,9 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
         configurarSpinnerGenero()
         configurarSpinnerEdad()
         configurarDatePicker()
-        configurarBotonBack()
         configurarBotonIntroducirJuego()
         configurarBotonImageViewAccesoGaleria()
+
     }
 
     private fun configurarBotonImageViewAccesoGaleria() {
@@ -129,11 +137,11 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
             if (nombreJuego.trim().isEmpty() || nombreEstudioDesarrollo.trim()
                     .isEmpty() || fechaLanzamientoFormateada.isEmpty() || !esFechaValida
             ) {
-                Toast.makeText(this, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
             } else if (urlImagen == null) {
-                Toast.makeText(this, "Falta seleccionar imagen", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Falta seleccionar imagen", Toast.LENGTH_SHORT).show()
             } else if (Utilidades.existeJuego(listaJuegos, nombreJuego.trim())) {
-                Toast.makeText(this, "Ese juego ya existe", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Ese juego ya existe", Toast.LENGTH_SHORT).show()
             } else {
                 val idGenerado: String? = dbRef.child("PS2").child("juegos").push().key
                 //GlobalScope(Dispatchers.IO)
@@ -152,22 +160,10 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
                         puntuacionRatingBar,
                         fechaFormateadaCreacionJuegoBaseDeDatos
                     )
-                    Utilidades.tostadaCorrutina(
-                        this@CrearJuegoActivity,
-                        applicationContext,
-                        "Juego creado con exito"
-                    )
                 }
+                // Otra forma de navegar desde FragmentA a FragmentB
+                findNavController().navigate(R.id.verJuegosFragment)
             }
-        }
-    }
-
-    private fun configurarBotonBack() {
-        //Volver atras boton
-        binding.ivBack.setOnClickListener {
-            //Pasamos a la siguiente actividad
-            val intent = Intent(this@CrearJuegoActivity, MainActivity::class.java)
-            startActivity(intent)
         }
     }
 
@@ -186,24 +182,27 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
                     fechaLanzamientoFormateada = obtenerFechaLanzamientoFormateada(selectedDate)
                     binding.tietFechaLanzamiento.setText(fechaLanzamientoFormateada)
                 }else{
-                    Toast.makeText(this, "Fecha de lanzamiento erronea", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Fecha de lanzamiento erronea", Toast.LENGTH_SHORT).show()
                     esFechaValida = false
                 }
             }
 
-            picker.show(supportFragmentManager, "jeje")
+            picker.show(childFragmentManager, "Este es para fragments")
         }
     }
 
     private fun configurarSpinnerEdad() {
         //Configurar el spinner de edades
         //Obtenemos el spinner
-        val spinnerEdad = findViewById<Spinner>(R.id.spinnerEdad)
+        val spinnerEdad = binding.spinnerEdad
         //Creamos un array con el que vamos a inflar al spinner
 
         // Crear un ArrayAdapter utilizando la lista de opciones y el diseño predeterminado
-        val adapterEdad =
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, edadesRecomendadasJuegos)
+        // Asegúrate de que el contexto no sea nulo antes de crear el ArrayAdapter
+        val adapterEdad = context?.let {
+            ArrayAdapter(it, android.R.layout.simple_list_item_1, edadesRecomendadasJuegos)
+        }
+
         // Aplicar el adaptador al Spinner
         spinnerEdad.adapter = adapterEdad
 
@@ -220,13 +219,6 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
 
                 // Asignar la opción seleccionada
                 opcionSeleccionadaEdad = selectedItem
-
-                // Mostrar la opción seleccionada
-                Toast.makeText(
-                    this@CrearJuegoActivity,
-                    "Seleccionaste: $selectedItem",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -238,12 +230,14 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
     private fun configurarSpinnerGenero() {
         //Configurar el spinner de genero de juego
         //Obtenemos el spinner
-        val spinnerGenero = findViewById<Spinner>(R.id.spinnerGenero)
+        val spinnerGenero = binding.spinnerGenero
         //Creamos un array con el que vamos a inflar al spinner
 
         // Crear un ArrayAdapter utilizando la lista de opciones y el diseño predeterminado
-        val adapterGenero =
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, opcionesGeneroJuegos)
+        // Asegúrate de que el contexto no sea nulo antes de crear el ArrayAdapter
+        val adapterGenero = context?.let {
+            ArrayAdapter(it, android.R.layout.simple_list_item_1, opcionesGeneroJuegos)
+        }
         // Aplicar el adaptador al Spinner
         spinnerGenero.adapter = adapterGenero
 
@@ -260,13 +254,6 @@ class CrearJuegoActivity: AppCompatActivity(), CoroutineScope {
 
                 // Asignar la opción seleccionada
                 opcionSeleccionadaGenero = selectedItem
-
-                // Mostrar la opción seleccionada
-                Toast.makeText(
-                    this@CrearJuegoActivity,
-                    "Seleccionaste: $selectedItem",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {

@@ -1,48 +1,63 @@
-package com.example.accesodatos
+package com.example.myapplication.fragmentos
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.SearchView
-import com.example.accesodatos.databinding.ActivityVerJuegosBinding
+import com.example.myapplication.adaptador.AdaptadorJuegoRecyclerView
+import com.example.myapplication.adaptador.OnItemClickListener
+import com.example.myapplication.databinding.FragmentVerJuegosBinding
+import com.google.firebase.database.ValueEventListener
+import com.example.myapplication.modelo.Juego
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
+import com.example.myapplication.R
+import com.google.firebase.storage.StorageReference
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class VerJuegosActivity : AppCompatActivity() {
+class VerJuegosFragment : Fragment() {
 
-    private lateinit var binding: ActivityVerJuegosBinding
+    private var _binding: FragmentVerJuegosBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var recycler: RecyclerView
     private  lateinit var lista:MutableList<Juego>
-    private lateinit var adaptador: JuegoAdaptador
+    private lateinit var adaptador: AdaptadorJuegoRecyclerView
 
     @Inject
     lateinit var dbRef: DatabaseReference
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    @Inject
+    lateinit var stoRef: StorageReference
 
-        binding = ActivityVerJuegosBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentVerJuegosBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //Codigo
         configurarSearchView()
         configurarBotonBack()
         configurarMenuPopup()
         configurarRecyclerView()
-    }
 
+    }
     private fun configurarRecyclerView() {
         lista = mutableListOf()
 
@@ -62,10 +77,10 @@ class VerJuegosActivity : AppCompatActivity() {
 
         })
 
-        adaptador = JuegoAdaptador(lista)
-        recycler = findViewById(R.id.rv)
+        adaptador = AdaptadorJuegoRecyclerView(lista, findNavController())
+        recycler = binding.rvVerJuegos
         recycler.adapter = adaptador
-        recycler.layoutManager = LinearLayoutManager(applicationContext)
+        recycler.layoutManager = LinearLayoutManager(context)
         recycler.setHasFixedSize(true)
     }
 
@@ -77,11 +92,7 @@ class VerJuegosActivity : AppCompatActivity() {
     }
 
     private fun configurarBotonBack() {
-        //Boton atras
-        binding.btnAtras.setOnClickListener {
-            val intent = Intent(this@VerJuegosActivity, MainActivity::class.java)
-            startActivity(intent)
-        }
+        
     }
 
     private fun configurarSearchView() {
@@ -100,7 +111,7 @@ class VerJuegosActivity : AppCompatActivity() {
 
     private fun showPopupMenu(view: View?) {
         // Crear instancia de PopupMenu
-        val popupMenu = view?.let { PopupMenu(this, it) }
+        val popupMenu = view?.let { android.widget.PopupMenu(context, it) }
 
         // Inflar el menú desde el archivo XML
         popupMenu?.menuInflater?.inflate(R.menu.popup_menu, popupMenu.menu)

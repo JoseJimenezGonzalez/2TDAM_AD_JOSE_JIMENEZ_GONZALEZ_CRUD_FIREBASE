@@ -13,5 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "accesodatos"
+rootProject.name = "My Application"
 include(":app")
+ 

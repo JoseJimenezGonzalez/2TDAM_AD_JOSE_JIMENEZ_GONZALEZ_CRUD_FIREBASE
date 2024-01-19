@@ -1,7 +1,8 @@
-package com.example.accesodatos
+package com.example.myapplication.adaptador
 
 import android.content.Context
-import android.content.Intent
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,27 +12,35 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.myapplication.R
+import com.example.myapplication.fragmentos.EditarJuegoFragment
+import com.example.myapplication.modelo.Juego
+import com.example.myapplication.utilidades.Utilidades
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
-class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.Adapter<JuegoAdaptador.JuegoViewHolder>(), Filterable{
+class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, private val navController: NavController):RecyclerView.Adapter<AdaptadorJuegoRecyclerView.JuegoViewHolder>(), Filterable{
+
     private lateinit var contexto: Context
     private var listaFiltrada = listaJuegos
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): JuegoAdaptador.JuegoViewHolder {
+    ): AdaptadorJuegoRecyclerView.JuegoViewHolder {
         val vistaItem = LayoutInflater.from(parent.context).inflate(R.layout.item_juego, parent, false)
         contexto = parent.context
         return JuegoViewHolder(vistaItem)
     }
 
-    override fun onBindViewHolder(holder: JuegoAdaptador.JuegoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AdaptadorJuegoRecyclerView.JuegoViewHolder, position: Int) {
+
         val itemActual = listaFiltrada[position]
-        //Falta
+
         holder.nombreJuego.text = itemActual.nombre
         holder.nombreEstudio.text = itemActual.estudio
         holder.generoJuego.text = itemActual.genero
@@ -50,21 +59,44 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
             .transition(Utilidades.transicion)
             .into(holder.miniatura)
 
-        holder.editar.setOnClickListener {
-            val activity = Intent(contexto, EditarJuegoActivity::class.java)
-            activity.putExtra("juego", itemActual)
-            contexto.startActivity(activity)
+
+        holder.itemView.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putParcelable("juego", itemActual)
+            val fragment = EditarJuegoFragment()
+            fragment.arguments = bundle
+            Log.d("juego bundle", bundle.toString())
+            navController.navigate(R.id.action_verJuegosFragment_to_editarJuegoFragment, bundle)
         }
 
-        holder.eliminar.setOnClickListener {
-            val dbRef = FirebaseDatabase.getInstance().getReference()
-            val stoRef = FirebaseStorage.getInstance().getReference()
-            listaFiltrada.remove(itemActual)
-            stoRef.child("PS2").child("covers").child(itemActual.id!!).delete()
-            dbRef.child("PS2").child("juegos").child(itemActual.id!!).removeValue()
+        holder.itemView.setOnLongClickListener {
+            Log.d("long click", "Se ha registrado el long click")
 
-            Toast.makeText(contexto,"Juego borrado con exito", Toast.LENGTH_SHORT).show()
+            val builder = AlertDialog.Builder(contexto)
+            builder.setTitle("Eliminar juego")
+            builder.setMessage("¿Estás seguro de que deseas eliminar este juego?")
+
+            builder.setPositiveButton("Sí") { _, _ ->
+                // Acción para long click
+                val dbRef = FirebaseDatabase.getInstance().getReference()
+                val stoRef = FirebaseStorage.getInstance().getReference()
+                listaFiltrada.remove(itemActual)
+                stoRef.child("PS2").child("covers").child(itemActual.id!!).delete()
+                dbRef.child("PS2").child("juegos").child(itemActual.id!!).removeValue()
+
+                Toast.makeText(contexto,"Juego borrado con éxito", Toast.LENGTH_SHORT).show()
+            }
+
+            builder.setNegativeButton("No") { _, _ ->
+                // No hacer nada si el usuario elige no eliminar
+            }
+
+            val dialog = builder.create()
+            dialog.show()
+
+            true // Importante devolver true para indicar que se manejo el evento long click
         }
+
     }
 
     override fun getItemCount(): Int = listaFiltrada.size
@@ -77,8 +109,6 @@ class JuegoAdaptador(private val listaJuegos: MutableList<Juego>):RecyclerView.A
         val edadRecomendadaJuego: TextView = itemView.findViewById(R.id.tvEdad)
         val fechaSalidaJuego: TextView = itemView.findViewById(R.id.tvFechaSalida)
         var puntuacion: RatingBar = itemView.findViewById(R.id.rbPuntuacion)
-        val editar: ImageView = itemView.findViewById(R.id.ivEditar)
-        val eliminar: ImageView = itemView.findViewById(R.id.ivBorrar)
     }
 
     override fun getFilter(): Filter {

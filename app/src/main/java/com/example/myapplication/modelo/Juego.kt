@@ -1,4 +1,4 @@
-package com.example.accesodatos
+package com.example.myapplication.modelo
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -15,4 +15,3 @@ data class Juego(
     var ratingBar: Double? = null,
     var fechaCreacionBaseDatos: String? = null,
 ): Parcelable
-

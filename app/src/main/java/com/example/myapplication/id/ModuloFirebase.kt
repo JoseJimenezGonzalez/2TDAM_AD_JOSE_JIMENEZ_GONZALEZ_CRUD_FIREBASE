@@ -1,4 +1,4 @@
-package com.example.accesodatos
+package com.example.myapplication.id
 
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -22,20 +22,20 @@ import javax.inject.Singleton
 //@Provides. Estos métodos proveen instancias de clases que pueden ser inyectadas en otras partes de la aplicación.
 @InstallIn(SingletonComponent::class)
 @Module
-object FirebaseModule {
+object ModuloFirebase {
 
     //@Provides->Proporciona una instancia de DatabaseReference, StorageReference
     //@Singleton->Indica que la instancia debe de ser unica en toda la aplicacion(singleton)
 
     @Provides
     @Singleton
-    fun provideFirebaseDatabase(): DatabaseReference {
+    fun inyectarFirebaseDatabase(): DatabaseReference {
         return FirebaseDatabase.getInstance().reference
     }
 
     @Provides
     @Singleton
-    fun provideFirebaseStorage(): StorageReference {
+    fun inyectarFirebaseStorage(): StorageReference {
         return FirebaseStorage.getInstance().reference
     }
 }

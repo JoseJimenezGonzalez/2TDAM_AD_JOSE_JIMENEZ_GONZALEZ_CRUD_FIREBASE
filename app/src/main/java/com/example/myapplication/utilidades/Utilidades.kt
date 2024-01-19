@@ -1,4 +1,4 @@
-package com.example.accesodatos
+package com.example.myapplication.utilidades
 
 import android.content.Context
 import android.net.Uri
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.request.RequestOptions
+import com.example.myapplication.R
+import com.example.myapplication.modelo.Juego
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference

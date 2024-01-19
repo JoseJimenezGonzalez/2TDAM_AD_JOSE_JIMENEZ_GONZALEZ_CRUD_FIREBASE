@@ -1,24 +1,28 @@
-package com.example.accesodatos
+package com.example.myapplication.fragmentos
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.example.accesodatos.databinding.ActivityEditarJuegoBinding
+import com.example.myapplication.R
+import com.example.myapplication.databinding.FragmentEditarJuegoBinding
+import com.example.myapplication.modelo.Juego
+import com.example.myapplication.utilidades.Utilidades
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -32,9 +36,10 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
-class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
+class EditarJuegoFragment : Fragment(), CoroutineScope {
 
-    private lateinit var binding: ActivityEditarJuegoBinding
+    private var _binding: FragmentEditarJuegoBinding? = null
+    private val binding get() = _binding!!
 
     private var urlCover: Uri? = null
     private lateinit var cover: ImageView
@@ -45,7 +50,7 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
     @Inject
     lateinit var stRef: StorageReference
 
-    private  lateinit var pojoJuego:Juego
+    private  lateinit var pojoJuego: Juego
     private lateinit var listaJuegos: MutableList<Juego>
 
     @Inject
@@ -95,13 +100,27 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         "Adultos (AO)",
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentEditarJuegoBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding = ActivityEditarJuegoBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        pojoJuego = intent.parcelable("juego")!!
+        //Codigo
+        Log.d("Nuevo fragmento", "Hola desde editar juego")
+        Log.d("arguments", arguments.toString())
+        val bundle = arguments
+        Log.d("Contenido de bundle", bundle.toString())
+        if (bundle != null) {
+            // Obtener el objeto juego del Bundle
+            pojoJuego = bundle.parcelable("juego")!!
+        }
+
         fechaCreacionBasedatos = pojoJuego.fechaCreacionBaseDatos!!
 
         listaJuegos = Utilidades.obtenerListaJuegos(dbRef)
@@ -109,16 +128,23 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         configuracionInicialUI()
         configurarSpinnerGenero()
         configurarSpinnerEdad()
-        configurarDatePicker()
         configurarBotonBack()
+        configurarDatePicker()
         configurarBotonIntroducirJuego()
         configurarBotonImageViewAccesoGaleria()
 
-        Glide.with(applicationContext)
+        Glide.with(requireContext())
             .load(pojoJuego.imagen)
-            .apply(Utilidades.opcionesGlide(applicationContext))
+            .apply(Utilidades.opcionesGlide(requireContext()))
             .transition(Utilidades.transicion)
             .into(binding.ivImagenJuego)
+
+    }
+
+    private fun configurarBotonBack() {
+        binding.ivBack.setOnClickListener {
+            findNavController().navigate(R.id.verJuegosFragment)
+        }
     }
 
     private fun configuracionInicialUI() {
@@ -139,9 +165,9 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
             if (nombreJuego.trim().isEmpty() || nombreEstudioDesarrollo.trim()
                     .isEmpty() || fechaLanzamientoFormateada.isEmpty() || !esFechaValida
             ) {
-                Toast.makeText(this, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Faltan datos en el formulario", Toast.LENGTH_SHORT).show()
             } else if (Utilidades.existeJuego(listaJuegos, nombreJuego.trim()) && nombreJuego != pojoJuego.nombre) {
-                Toast.makeText(this, "Ese juego ya existe", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Ese juego ya existe", Toast.LENGTH_SHORT).show()
             } else {
                 var urlCoverFirebase = String()
                 val idJuego = pojoJuego.id
@@ -167,12 +193,10 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
                         puntuacionRatingBar,
                         fechaCreacionBasedatos
                     )
-                    Utilidades.tostadaCorrutina(
-                        this@EditarJuegoActivity,
-                        applicationContext,
-                        "Juego modificado con exito"
-                    )
                 }
+                //Que hacer despues de darle al boton  y que este ok
+                // Otra forma de navegar desde FragmentA a FragmentB
+                findNavController().navigate(R.id.verJuegosFragment)
             }
         }
     }
@@ -181,13 +205,6 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         //Cuando le da click en la imagen para guardar imagen del juego
         binding.ivImagenJuego.setOnClickListener {
             accesoGaleria.launch("image/*")
-        }
-    }
-
-    private fun configurarBotonBack(){
-        binding.ivBack.setOnClickListener {
-            val intent = Intent(this, VerJuegosActivity::class.java)
-            startActivity(intent)
         }
     }
 
@@ -206,12 +223,12 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
                     fechaLanzamientoFormateada = obtenerFechaLanzamientoFormateada(selectedDate)
                     binding.tietFechaLanzamiento.setText(fechaLanzamientoFormateada)
                 }else{
-                    Toast.makeText(this, "Fecha de lanzamiento erronea", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Fecha de lanzamiento erronea", Toast.LENGTH_SHORT).show()
                     esFechaValida = false
                 }
             }
 
-            picker.show(supportFragmentManager, "jeje")
+            picker.show(childFragmentManager, "Este es para fragments")
         }
     }
 
@@ -222,11 +239,13 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         //Ahora vamos con los spinner
         //Configurar el spinner
         //Obtenemos el spinner edades
-        val spinnerEdades = findViewById<Spinner>(R.id.spinnerEdad)
+        val spinnerEdades = binding.spinnerEdad
         // Crear un ArrayAdapter utilizando la lista de opciones y el diseño predeterminado
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, edadesRecomendadasJuegos)
+        val adapterEdad = context?.let {
+            ArrayAdapter(it, android.R.layout.simple_list_item_1, edadesRecomendadasJuegos)
+        }
         // Aplicar el adaptador al Spinner
-        binding.spinnerEdad.adapter = adapter
+        binding.spinnerEdad.adapter = adapterEdad
         // Recuperar la posición guardada y establecerla en el Spinner
         binding.spinnerEdad.setSelection(posicionEdadRecomendada)
         //Guardamos la eleccion del spinner edad
@@ -255,9 +274,11 @@ class EditarJuegoActivity : AppCompatActivity(), CoroutineScope {
         opcionSeleccionadaGenero = pojoJuego.genero!!
         val posicionGeneroDelJuego = opcionesGeneroJuegos.indexOf(pojoJuego.genero)
         //Obtenemos el spinner generos de los juegos
-        val spinnerGeneros = findViewById<Spinner>(R.id.spinnerGenero)
+        val spinnerGeneros = binding.spinnerGenero
         // Crear un ArrayAdapter utilizando la lista de opciones y el diseño predeterminado
-        val adapterGenero = ArrayAdapter(this, android.R.layout.simple_list_item_1, opcionesGeneroJuegos)
+        val adapterGenero = context?.let {
+            ArrayAdapter(it, android.R.layout.simple_list_item_1, opcionesGeneroJuegos)
+        }
         // Aplicar el adaptador al Spinner
         binding.spinnerGenero.adapter = adapterGenero
         // Recuperar la posición guardada y establecerla en el Spinner

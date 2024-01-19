@@ -1,4 +1,4 @@
-package com.example.accesodatos
+package com.example.myapplication.id
 
 import dagger.Module
 import dagger.Provides
@@ -8,10 +8,10 @@ import kotlinx.coroutines.Job
 
 @InstallIn(SingletonComponent::class)
 @Module
-object CoroutineModule {
+object ModuloCorrutina {
 
     @Provides
-    fun provideJob(): Job {
+    fun inyectarJob(): Job {
         return Job()
     }
 }
