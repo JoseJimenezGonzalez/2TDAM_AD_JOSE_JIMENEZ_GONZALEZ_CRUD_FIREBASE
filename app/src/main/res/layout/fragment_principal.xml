@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragmentos.PrincipalFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragmentos.PrincipalFragment"
+    android:background="#B2DFDB">
 
-    <!-- TODO: Update blank fragment layout -->
+
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/tvTituloApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ivFotoPantallaPrincipal"
+        android:text="Collection App"
+        android:textSize="48sp">
+    </TextView>
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/ivFotoPantallaPrincipal"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTituloApp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvExplicacionApp"
+        android:src="@drawable/img_android">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/tvExplicacionApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ivFotoPantallaPrincipal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvTituloInformacion"
+        android:padding="15dp"
+        android:textSize="16sp"
+        android:text="Esta es una mini aplicación para llevar la contabilidad de los juegos que has jugado y/o tienes">
+    </TextView>
+
+    <TextView
+        android:id="@+id/tvTituloInformacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvExplicacionApp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvExplicacionInformacion"
+        android:padding="15dp"
+        android:textSize="28sp"
+        android:text="Aclaraciones sobre el modo de uso">
+    </TextView>
+
+    <TextView
+        android:id="@+id/tvExplicacionInformacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvTituloInformacion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="15dp"
+        android:textSize="16sp"
+        android:text="En la pantalla de colección si se hace un click simple se accede a la pantalla de editar juego, para eliminar un juego hay que hacer un click largo">
+    </TextView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
