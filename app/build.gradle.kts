@@ -71,4 +71,6 @@ dependencies {
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-compiler:2.50")
+    //Pantalla presentacion
+    implementation("com.airbnb.android:lottie:4.2.1")
 }
