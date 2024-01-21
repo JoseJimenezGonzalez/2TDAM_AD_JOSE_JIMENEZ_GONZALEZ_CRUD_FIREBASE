@@ -37,16 +37,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
         android:visibility="invisible">
-        <androidx.cardview.widget.CardView
+        <ImageView
             android:layout_width="300dp"
             android:layout_height="300dp"
-            app:cardCornerRadius="16dp">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/android_cry">
-            </ImageView>
-        </androidx.cardview.widget.CardView>
+            android:src="@drawable/android_cry"
+            android:layout_marginBottom="50dp">
+        </ImageView>
 
         <TextView
             android:layout_marginTop="25dp"

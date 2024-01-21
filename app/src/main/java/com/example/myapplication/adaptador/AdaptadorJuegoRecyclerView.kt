@@ -86,6 +86,13 @@ class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, pr
                 dbRef.child("PS2").child("juegos").child(itemActual.id!!).removeValue()
 
                 Toast.makeText(contexto,"Juego borrado con éxito", Toast.LENGTH_SHORT).show()
+
+                //Mostrar la imagen si esta vacia la lista
+                if(listaFiltrada.isEmpty()){
+                    linearLayout.visibility = View.VISIBLE
+                }else{
+                    linearLayout.visibility = View.GONE
+                }
             }
 
             builder.setNegativeButton("No") { _, _ ->
@@ -131,6 +138,13 @@ class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, pr
 
             override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
                 notifyDataSetChanged()
+
+                //Mostrar la imagen si esta vacia la lista
+                if(listaFiltrada.isEmpty()){
+                    linearLayout.visibility = View.VISIBLE
+                }else{
+                    linearLayout.visibility = View.GONE
+                }
             }
         }
     }
@@ -146,5 +160,12 @@ class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, pr
             }.toMutableList()
         }
         notifyDataSetChanged()
+
+        //Mostrar la imagen si esta vacia la lista
+        if(listaFiltrada.isEmpty()){
+            linearLayout.visibility = View.VISIBLE
+        }else{
+            linearLayout.visibility = View.GONE
+        }
     }
 }

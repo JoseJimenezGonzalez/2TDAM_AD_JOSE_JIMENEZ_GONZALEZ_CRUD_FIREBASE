@@ -57,6 +57,9 @@ class VerJuegosFragment : Fragment() {
         configurarRecyclerView()
 
     }
+
+
+
     private fun configurarRecyclerView() {
         lista = mutableListOf()
 
@@ -68,6 +71,9 @@ class VerJuegosFragment : Fragment() {
                     lista.add(pojoJuego!!)
                 }
                 recycler.adapter?.notifyDataSetChanged()
+
+
+                comprobarSiHayJuegos()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -81,6 +87,16 @@ class VerJuegosFragment : Fragment() {
         recycler.adapter = adaptador
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.setHasFixedSize(true)
+
+    }
+
+    private fun comprobarSiHayJuegos() {
+        //Mostrar la imagen si esta vacia la lista
+        if(lista.isEmpty()){
+            binding.lySinJuegos.visibility = View.VISIBLE
+        }else{
+            binding.lySinJuegos.visibility = View.GONE
+        }
     }
 
     private fun configurarMenuPopup() {
