@@ -2,6 +2,8 @@ package com.example.myapplication.utilidades
 
 import android.content.Context
 import android.net.Uri
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -132,6 +134,15 @@ class Utilidades {
                 .placeholder(animacionCarga(context))
                 .fallback(R.drawable.ic_ps2_mando)
                 .error(R.drawable.error_404)
+        }
+
+        fun comprobarSiHayJuegos(lista: MutableList<Juego>, linearLayout: LinearLayout) {
+            //Mostrar la imagen si esta vacia la lista
+            if(lista.isEmpty()){
+                linearLayout.visibility = View.VISIBLE
+            }else{
+                linearLayout.visibility = View.GONE
+            }
         }
     }
 }

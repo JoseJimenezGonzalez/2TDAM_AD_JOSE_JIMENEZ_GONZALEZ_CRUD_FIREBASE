@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +22,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
+import com.example.myapplication.utilidades.Utilidades
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -73,7 +76,7 @@ class VerJuegosFragment : Fragment() {
                 recycler.adapter?.notifyDataSetChanged()
 
 
-                comprobarSiHayJuegos()
+                Utilidades.comprobarSiHayJuegos(lista, binding.lySinJuegos)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -88,15 +91,6 @@ class VerJuegosFragment : Fragment() {
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.setHasFixedSize(true)
 
-    }
-
-    private fun comprobarSiHayJuegos() {
-        //Mostrar la imagen si esta vacia la lista
-        if(lista.isEmpty()){
-            binding.lySinJuegos.visibility = View.VISIBLE
-        }else{
-            binding.lySinJuegos.visibility = View.GONE
-        }
     }
 
     private fun configurarMenuPopup() {

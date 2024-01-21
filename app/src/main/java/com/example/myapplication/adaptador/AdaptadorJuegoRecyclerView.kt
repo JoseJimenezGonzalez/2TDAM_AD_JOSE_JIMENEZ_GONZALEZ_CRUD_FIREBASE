@@ -88,11 +88,7 @@ class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, pr
                 Toast.makeText(contexto,"Juego borrado con éxito", Toast.LENGTH_SHORT).show()
 
                 //Mostrar la imagen si esta vacia la lista
-                if(listaFiltrada.isEmpty()){
-                    linearLayout.visibility = View.VISIBLE
-                }else{
-                    linearLayout.visibility = View.GONE
-                }
+                Utilidades.comprobarSiHayJuegos(listaFiltrada, linearLayout)
             }
 
             builder.setNegativeButton("No") { _, _ ->
@@ -140,11 +136,7 @@ class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, pr
                 notifyDataSetChanged()
 
                 //Mostrar la imagen si esta vacia la lista
-                if(listaFiltrada.isEmpty()){
-                    linearLayout.visibility = View.VISIBLE
-                }else{
-                    linearLayout.visibility = View.GONE
-                }
+                Utilidades.comprobarSiHayJuegos(listaFiltrada, linearLayout)
             }
         }
     }
@@ -162,10 +154,6 @@ class AdaptadorJuegoRecyclerView(private val listaJuegos: MutableList<Juego>, pr
         notifyDataSetChanged()
 
         //Mostrar la imagen si esta vacia la lista
-        if(listaFiltrada.isEmpty()){
-            linearLayout.visibility = View.VISIBLE
-        }else{
-            linearLayout.visibility = View.GONE
-        }
+        Utilidades.comprobarSiHayJuegos(listaFiltrada, linearLayout)
     }
 }
