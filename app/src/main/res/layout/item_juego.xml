@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="16dp"
-    android:backgroundTint="#F0E2F8"
-    android:layout_margin="8dp">
+    android:backgroundTint="#FEEAE6"
+    android:layout_margin="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,9 +23,10 @@
                 android:id="@+id/ivFotoJuego"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="110dp"
-                android:layout_height="160dp"
-                android:scaleType="centerCrop">
+                android:layout_width="100dp"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_ps2_mando">
             </ImageView>
         </androidx.cardview.widget.CardView>
 
@@ -102,6 +103,27 @@
             android:layout_marginTop="15dp"
             android:isIndicator="true">
         </RatingBar>
+
+        <ImageView
+            android:id="@+id/ivEditar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_edit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp">
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/ivBorrar"
+            app:layout_constraintTop_toBottomOf="@id/ivEditar"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_delete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp">
+        </ImageView>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
