@@ -127,7 +127,9 @@ class MainActivity : AppCompatActivity() {
         destino: Class<*>
     ) {
         val id = "Canal de prueba"
-        val actividad = Intent(applicationContext, destino)
+        val actividad = Intent(applicationContext, destino).apply{
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK //Para evitar bugs en la aplicacion
+        }
 
         actividad.putExtra("juego", pojo)
 
